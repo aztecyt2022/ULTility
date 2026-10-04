@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#140707">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Site</title>
+  <style>
+:root{--bg:#140707;--panel:#1f0e0e;--panel2:#2b1314;--line:#4d2325;--text:#fff4dc;--muted:#c4a27c;--accent:#f2b83b;--accent2:#c8202e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+header{max-width:1100px;margin:0 auto;padding:22px 20px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.header-actions{order:2}.clock{order:4;text-align:right;border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:8px 14px}.version-box{order:3;margin-left:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:8px 14px;line-height:1.15}.version-box .vlabel{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.version-box .vnum{font-size:1.1rem;font-weight:800;color:var(--accent)}.clock-time{font-size:1.5rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}.clock-date{font-size:.8rem;color:var(--muted)}.header-content{order:1;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:8px 16px}
+h1{color:var(--accent);font-size:1.7rem;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.subtitle{font-size:.85rem;color:var(--muted)}
+.version{display:inline-block;margin-left:6px;padding:1px 8px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);color:var(--accent);font-size:.7rem;font-weight:700;letter-spacing:.04em;vertical-align:middle}
+.back-btn{display:none;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:700;font-size:.85rem}
+.back-btn:hover{border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tool-search{max-width:1100px;margin:0 auto;padding:6px 20px}
+.tool-search input{width:100%;height:46px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font-size:.95rem;outline:none}
+.tool-search input:focus{border-color:var(--accent)}
+main{max-width:1100px;margin:0 auto;padding:14px 20px 48px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}.tools-grid.hidden{display:none}
+.tool-card{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--panel);cursor:pointer;contain:layout paint;transition:border-color .15s,background .15s,box-shadow .15s,transform .15s}
+.tool-card:hover,.tool-card:focus-visible{border-color:var(--accent);background:linear-gradient(135deg,rgba(242,184,59,.20),rgba(200,32,46,.26));box-shadow:inset 0 0 0 1px var(--accent),inset 0 0 22px rgba(242,184,59,.12);transform:translateY(-2px)}
+.tool-card:hover .tool-icon,.tool-card:focus-visible .tool-icon{background:var(--accent);color:#2a0606}
+.tool-card:hover .tool-name,.tool-card:focus-visible .tool-name{color:var(--accent)}
+.tool-card:hover .tool-description,.tool-card:focus-visible .tool-description{color:var(--text)}
+.tool-card.hidden{display:none}
+.tool-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--panel2);font-size:1.3rem;flex:none}
+.tool-name{color:var(--accent);font-weight:700;font-size:1rem;flex:1;min-width:0}
+.tool-description{flex-basis:100%;font-size:.82rem;color:var(--muted)}
+.tool-link{display:none}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 0}
+.tool-view{display:none}.tool-view.active{display:block}
+.tool-view>*{background:var(--panel);border:1px solid var(--line);border-radius:16px}
+.view-pad{padding:22px}.view-pad h2{font-size:1.2rem;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+.btn{border:1px solid var(--line);background:var(--panel2);color:#fbe9c6;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:.86rem;font-family:inherit}
+.btn:hover{border-color:var(--accent)}.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--accent2);border-color:var(--accent2);color:#fff}.btn.primary:hover{filter:brightness(1.12)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.site-form input,.tool-view textarea,.tool-view input:not([type=checkbox]):not([type=range]),.tool-view select{width:100%;border:1px solid var(--line);border-radius:10px;background:#100505;color:#fff1d0;padding:11px 12px;font:inherit;outline:none}
+.tool-view textarea{min-height:220px;resize:vertical}
+.site-form input:focus,.tool-view textarea:focus,.tool-view input:focus,.tool-view select:focus{border-color:var(--accent)}
+.tool-view input[type=color]{width:56px;height:44px;padding:3px}.tool-view input[type=range]{width:100%;accent-color:#f2b83b}
+.mini-grid{display:grid;gap:14px}.mini-grid label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:.85rem}
+.json-container,.encode-decode-container{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.json-panel,.encode-decode-panel{display:flex;flex-direction:column;gap:8px;min-width:0}
+.json-panel h3,.encode-decode-panel h3{font-size:.8rem;color:var(--muted)}
+.json-output,.result-box{border:1px solid var(--line);border-radius:10px;background:#100505;color:#fbe6b8;padding:14px;min-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.json-output{font-family:ui-monospace,Menlo,Consolas,monospace}.json-success{color:#4ade80}.json-error{color:#ff6b6b}
+.pw-out{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.1rem;word-break:break-all;padding:14px;border:1px solid var(--line);border-radius:10px;background:#100505;min-height:54px;color:var(--accent)}
+.display-time{font-size:3.2rem;font-weight:800;font-family:ui-monospace,Menlo,Consolas,monospace;text-align:center;margin:16px 0;color:var(--accent)}
+.laps-list{margin-top:16px;max-height:200px;overflow-y:auto;border-top:1px solid var(--line);padding-top:8px}
+.lap-item{display:flex;padding:7px 10px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace;font-size:.9rem}.lap-item span:last-child{margin-left:auto;color:var(--accent)}
+.password-options{margin:16px 0;display:flex;flex-direction:column;gap:10px}
+.checkbox-label{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}.checkbox-label input{width:18px!important;height:18px!important}
+.grad-preview{height:140px;border-radius:12px;border:1px solid var(--line);margin:12px 0}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.calc-grid .btn{padding:15px 0;font-size:1.1rem}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--accent);padding:9px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}.toast.show{opacity:1}
+@media (max-width:640px){.header-content{flex:1 1 100%;padding:6px 12px}.version-box{margin-left:0;padding:6px 10px}.clock{margin-left:auto;padding:6px 10px}.version-box .vnum{font-size:.95rem}.clock-time{font-size:1.1rem}.clock-date{font-size:.7rem}header{padding-top:16px}.json-container,.encode-decode-container{grid-template-columns:1fr}.tools-grid{grid-template-columns:1fr 1fr}.tool-description{display:none}.display-time{font-size:2.4rem}}
+.section-label{display:flex;align-items:center;gap:12px;margin:6px 0 12px;color:var(--muted);font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.section-label .line{flex:1;height:1px;background:var(--line)}
+.section-label .btn{padding:6px 12px;font-size:.78rem;letter-spacing:0;text-transform:none}
+#sitesSection{margin-bottom:34px}#timersLabel{margin-top:0}#numbersLabel{margin-top:34px}#toolsLabel{margin-top:34px}#toolsLabel2{margin-top:34px}
+.site-form{display:none;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px;background:#100505}.site-form.show{display:block}
+.site-form .row{margin:0 0 10px}.site-form .row:last-child{margin:0}
+.tool-card.editing{border-style:dashed;border-color:var(--accent)}
+.tool-card .del{margin-left:auto;border:0;background:none;color:var(--muted);font-size:1.2rem;font-weight:800;cursor:pointer;padding:0 4px;line-height:1}.tool-card .del:hover{color:#ff6b6b}
+.tool-card .lock{margin-left:auto;font-size:.85rem;opacity:.7}
+.tool-card.add{justify-content:center;color:var(--accent);font-weight:700;border-style:dashed}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.clock-time{cursor:pointer}.clock-tz{display:none;margin-top:6px;max-width:220px;border:1px solid var(--line);border-radius:8px;background:#100505;color:#fff1d0;padding:5px 8px;font:inherit;font-size:.78rem}.clock-tz.show{display:inline-block}
+.ck-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;background:#100505;flex-wrap:wrap}.ck-row .n{flex:1;font-weight:700;min-width:120px;overflow-wrap:anywhere}.ck-row .t{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.2rem;color:var(--accent);min-width:84px;text-align:right}.ck-row.done{border-color:#4ade80}.ck-row.done .t{color:#4ade80}.ck-row .btn{padding:7px 11px}
+.wc-wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}.wc-wrap>*{flex:1 1 300px;min-width:0}
+#wcGlobe{width:100%;max-width:380px;display:block;margin:0 auto;touch-action:none;cursor:grab}#wcGlobe:active{cursor:grabbing}
+.wc-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;background:#100505;cursor:pointer}.wc-row.focus,.wc-row:hover{border-color:var(--accent)}.wc-row .n{flex:1;min-width:0;font-weight:700}.wc-row .n small{display:block;color:var(--muted);font-weight:400;font-size:.75rem}.wc-row .wct{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.15rem;color:var(--accent)}.wc-row .del{border:0;background:none;color:var(--muted);font-size:1.2rem;font-weight:800;cursor:pointer}.wc-row .del:hover{color:#ff6b6b}
+.tool-search{display:flex;gap:10px;align-items:center}.tool-search input{flex:1;min-width:0}#iconBtn{height:46px;white-space:nowrap}body.no-icons .tool-icon{display:none}
+body.pad-nav :focus{outline:3px solid var(--accent);outline-offset:3px}body.pad-nav .tool-card:focus{border-color:var(--accent);background:linear-gradient(135deg,rgba(242,184,59,.20),rgba(200,32,46,.26))}
+.version-box{cursor:pointer;font:inherit;color:inherit}.version-box:hover{border-color:var(--accent)}
+.upd{border:1px solid var(--line);border-radius:10px;background:#100505;padding:14px;margin-top:10px}.upd h3{color:var(--accent);font-size:1.05rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.upd .cur{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--accent2);color:#fff}.upd small{color:var(--muted);font-weight:400;font-size:.78rem}.upd ul{margin:8px 0 0 18px;font-size:.9rem}.upd li{margin:3px 0}
+.wc-box{border:1px solid var(--line);border-radius:12px;background:#100505;padding:14px}.wc-box .wc-row{background:var(--panel2)}#wcList{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0 10px}
+.sub-label{display:flex;align-items:center;gap:10px;margin:16px 0 8px;color:var(--text);font-size:.85rem;font-weight:700}.sub-label span::before{content:"";display:inline-block;width:4px;height:12px;background:var(--accent);margin-right:8px;border-radius:2px;vertical-align:-1px}.sub-label .line{flex:1;height:1px;background:var(--line)}.site-group:first-child .sub-label{margin-top:4px}
+.site-hint{display:none;color:var(--muted);font-size:.8rem;margin-bottom:10px}.tool-card.editing{user-select:none;-webkit-user-select:none;cursor:grab}.tool-card.dragging{opacity:.35}.tool-card.drop-before{box-shadow:-5px 0 0 0 var(--accent)}.tool-card.drop-after{box-shadow:5px 0 0 0 var(--accent)}.site-group.drop-into{outline:2px dashed var(--accent);outline-offset:4px;border-radius:12px}.drag-ghost{box-shadow:0 8px 24px rgba(0,0,0,.6)!important;border-color:var(--accent)!important}
+body:not(.searching) .tools-grid.collapsed{display:none}body:not(.searching) #sitesSection.collapsed>*:not(.section-label){display:none!important}.section-label .sec-toggle{margin-left:0}
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="header-actions">
+      <button class="back-btn" id="backBtn" onclick="showGrid()">← Back</button>
+    </div>
+    <div class="header-content">
+      <h1>Main Site</h1>
+      <p class="subtitle">Quick access to useful utilities</p>
+    </div>
+    <button class="version-box" id="verBtn" onclick="openTool('updatesView')" title="See what's new"><span class="vlabel">Version</span><span class="vnum">3.2L-4</span></button>
+    <div class="clock" aria-live="off"><div class="clock-time" id="clkTime" role="button" tabindex="0" title="Tap to change time zone" onclick="tzToggle()" onkeydown="if(event.key==='Enter')tzToggle()"></div><div class="clock-date" id="clkDate"></div><select id="clkTz" class="clock-tz" aria-label="Clock time zone" onchange="tzSet(this.value)"></select></div>
+  </header>
+
+  <div class="tool-search" id="searchBarContainer">
+    <input type="text" id="toolSearch" placeholder="Search tools..." oninput="filterTools()"><button class="btn" id="iconBtn" onclick="iconToggle()" title="Show or hide the menu icons">Icons: On</button>
+  </div>
+
+  <main>
+    <section id="sitesSection">
+      <div class="section-label"><span>Your Sites</span><i class="line"></i><button class="btn" id="siteEditBtn" onclick="siteToggleEdit()">✎ Edit</button></div>
+      <p class="site-hint" id="siteHint">Drag a tile to reorder it or move it into another group (on touch screens, press and hold first). Tap a tile to edit it.</p>
+      <div class="site-form" id="siteForm">
+        <div class="row"><input id="sfIcon" placeholder="Icon" maxlength="4" style="width:80px;text-align:center"><input id="sfName" placeholder="Name" style="flex:1;min-width:140px"></div>
+        <div class="row"><input id="sfUrl" type="url" inputmode="url" placeholder="example.com or https://example.com"></div>
+        <div class="row"><input id="sfGroup" list="sfGroups" placeholder="Group (e.g. Video &amp; Streaming)"><datalist id="sfGroups"></datalist></div>
+        <div class="row"><button class="btn primary" onclick="siteSaveForm()">Save</button><button class="btn" onclick="siteCloseForm()">Cancel</button><button class="btn" onclick="siteReset()" style="margin-left:auto">Reset to defaults</button></div>
+        <div class="json-error" id="sfErr" style="margin-top:8px"></div>
+      </div>
+      <div id="siteTiles"></div>
+    </section>
+
+    <div class="section-label" id="timersLabel"><span>Timers</span><i class="line"></i></div>
+    <div class="tools-grid" id="timersGrid">
+      <div class="tool-card" tabindex="0" role="button" data-name="stopwatch precise start, pause, reset and lap timing features." onclick="openTool('stopwatchView')" onkeydown="if(event.key==='Enter')openTool('stopwatchView')">
+        <div class="tool-icon">⏱</div><div class="tool-name">Stopwatch</div><div class="tool-description">Precise start, pause, reset and lap timing features.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="countdown timer set minutes and seconds with an alarm." onclick="openTool('countdownView')" onkeydown="if(event.key==='Enter')openTool('countdownView')">
+        <div class="tool-icon">⏳</div><div class="tool-name">Countdown Timer</div><div class="tool-description">Set minutes and seconds with an alarm.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="cooldown / respawn tracker run several named cooldowns and respawn timers at once." onclick="openTool('cooldownView')" onkeydown="if(event.key==='Enter')openTool('cooldownView')">
+        <div class="tool-icon">🛡️</div><div class="tool-name">Cooldown / Respawn Tracker</div><div class="tool-description">Run several named cooldowns and respawn timers at once.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="gaming session reminder set a play limit with a warning before time is up." onclick="openTool('sessionView')" onkeydown="if(event.key==='Enter')openTool('sessionView')">
+        <div class="tool-icon">🎮</div><div class="tool-name">Gaming Session Reminder</div><div class="tool-description">Set a play limit with a warning before time is up.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="world clock times around the world with a draggable globe locator." onclick="openTool('worldView')" onkeydown="if(event.key==='Enter')openTool('worldView')">
+        <div class="tool-icon">🌍</div><div class="tool-name">World Clock</div><div class="tool-description">Times around the world with a draggable globe locator.</div><div class="tool-link">Open →</div>
+      </div>
+    </div>
+
+    <div class="section-label" id="numbersLabel"><span>Calculators and Other Math Tools</span><i class="line"></i></div>
+    <div class="tools-grid" id="numbersGrid">
+      <div class="tool-card" tabindex="0" role="button" data-name="calculator everyday math with a simple keypad." onclick="openTool('calcView')" onkeydown="if(event.key==='Enter')openTool('calcView')">
+        <div class="tool-icon">🧮</div><div class="tool-name">Calculator</div><div class="tool-description">Everyday math with a simple keypad.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="unit converter length, weight, temperature and volume." onclick="openTool('unitView')" onkeydown="if(event.key==='Enter')openTool('unitView')">
+        <div class="tool-icon">📏</div><div class="tool-name">Unit Converter</div><div class="tool-description">Length, weight, temperature and volume.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="tip & split work out the tip and split the bill." onclick="openTool('tipView')" onkeydown="if(event.key==='Enter')openTool('tipView')">
+        <div class="tool-icon">💵</div><div class="tool-name">Tip & Split</div><div class="tool-description">Work out the tip and split the bill.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="percentage percent of, percent change and discounts." onclick="openTool('percentView')" onkeydown="if(event.key==='Enter')openTool('percentView')">
+        <div class="tool-icon">％</div><div class="tool-name">Percentage</div><div class="tool-description">Percent of, percent change and discounts.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="date calculator days between dates, or add days to a date." onclick="openTool('dateView')" onkeydown="if(event.key==='Enter')openTool('dateView')">
+        <div class="tool-icon">📅</div><div class="tool-name">Date Calculator</div><div class="tool-description">Days between dates, or add days to a date.</div><div class="tool-link">Open →</div>
+      </div>
+    </div>
+
+    <div class="section-label" id="toolsLabel"><span>Tools</span><i class="line"></i></div>
+    <div class="tools-grid" id="toolsGrid">
+      <div class="tool-card" tabindex="0" role="button" data-name="json formatter format, minify and validate json with clear errors." onclick="openTool('jsonView')" onkeydown="if(event.key==='Enter')openTool('jsonView')">
+        <div class="tool-icon">{ }</div><div class="tool-name">JSON Formatter</div><div class="tool-description">Format, minify and validate JSON with clear errors.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="encode / decode base64 and url encoding and decoding in one place." onclick="openTool('encodeView')" onkeydown="if(event.key==='Enter')openTool('encodeView')">
+        <div class="tool-icon">🔣</div><div class="tool-name">Encode / Decode</div><div class="tool-description">Base64 and URL encoding and decoding in one place.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="hash generator sha-1, sha-256 and sha-512 hashes of any text." onclick="openTool('hashView')" onkeydown="if(event.key==='Enter')openTool('hashView')">
+        <div class="tool-icon">#️⃣</div><div class="tool-name">Hash Generator</div><div class="tool-description">SHA-1, SHA-256 and SHA-512 hashes of any text.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="word counter count words and characters, change text case." onclick="openTool('wordView')" onkeydown="if(event.key==='Enter')openTool('wordView')">
+        <div class="tool-icon">📝</div><div class="tool-name">Word Counter</div><div class="tool-description">Count words and characters, change text case.</div><div class="tool-link">Open →</div>
+      </div>
+    </div>
+
+    <div class="section-label" id="toolsLabel2"><span>More Tools</span><i class="line"></i></div>
+    <div class="tools-grid" id="toolsGrid2">
+      <div class="tool-card" tabindex="0" role="button" data-name="dice, coin & picker roll dice, flip a coin or pick from a list." onclick="openTool('randomView')" onkeydown="if(event.key==='Enter')openTool('randomView')">
+        <div class="tool-icon">🎲</div><div class="tool-name">Dice, Coin & Picker</div><div class="tool-description">Roll dice, flip a coin or pick from a list.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="password generator create custom secure random passwords instantly." onclick="openTool('passwordView')" onkeydown="if(event.key==='Enter')openTool('passwordView')">
+        <div class="tool-icon">🔐</div><div class="tool-name">Password Generator</div><div class="tool-description">Create custom secure random passwords instantly.</div><div class="tool-link">Open →</div>
+      </div>
+      <div class="tool-card" tabindex="0" role="button" data-name="gradient maker pick two colors and an angle, then copy the css." onclick="openTool('gradientView')" onkeydown="if(event.key==='Enter')openTool('gradientView')">
+        <div class="tool-icon">🎨</div><div class="tool-name">Gradient Maker</div><div class="tool-description">Pick two colors and an angle, then copy the CSS.</div><div class="tool-link">Open →</div>
+      </div>
+    </div>
+
+    <div class="empty" id="emptyMsg">No tools match your search.</div>
+
+
+    <div class="tool-view" id="stopwatchView"><div class="view-pad stopwatch-container">
+      <h2>Stopwatch</h2><div class="display-time" id="swDisplay">00:00.00</div>
+      <div class="row" style="justify-content:center"><button class="btn primary" id="swStart" onclick="swToggle()">Start</button><button class="btn" onclick="swLap()">Lap</button><button class="btn" onclick="swReset()">Reset</button></div>
+      <div class="laps-list" id="laps"></div></div></div>
+
+    <div class="tool-view" id="passwordView"><div class="view-pad password-section">
+      <h2>Password Generator</h2><div class="pw-out" id="pwOut">Press Generate</div>
+      <div class="password-options">
+        <label>Length: <b id="pwLenVal">16</b><input type="range" id="pwLen" min="6" max="64" value="16" oninput="pwLenVal.textContent=this.value"></label>
+        <label class="checkbox-label"><input type="checkbox" id="pwU" checked> Uppercase</label>
+        <label class="checkbox-label"><input type="checkbox" id="pwL" checked> Lowercase</label>
+        <label class="checkbox-label"><input type="checkbox" id="pwN" checked> Numbers</label>
+        <label class="checkbox-label"><input type="checkbox" id="pwS" checked> Symbols</label></div>
+      <div class="row"><button class="btn primary" onclick="genPw()">Generate</button><button class="btn" onclick="copyText(pwOut.textContent)">Copy</button></div></div></div>
+
+    <div class="tool-view" id="jsonView"><div class="view-pad editor-container">
+      <h2>JSON Formatter</h2>
+      <div class="row"><button class="btn primary" onclick="jsonRun(2)">Format</button><button class="btn" onclick="jsonRun(0)">Minify</button><button class="btn" onclick="copyText(jsonOut.textContent)">Copy output</button></div>
+      <div class="json-container"><div class="json-panel"><h3>Input</h3><textarea id="jsonIn" placeholder='{"hello":"world"}'></textarea></div>
+      <div class="json-panel"><h3>Output</h3><div class="json-output" id="jsonOut"></div></div></div></div></div>
+
+    <div class="tool-view" id="encodeView"><div class="view-pad editor-container">
+      <h2>Encode / Decode</h2>
+      <div class="row"><select id="encMode" style="width:auto"><option value="b64">Base64</option><option value="url">URL</option></select>
+      <button class="btn primary" onclick="encRun(true)">Encode</button><button class="btn" onclick="encRun(false)">Decode</button><button class="btn" onclick="copyText(encOut.textContent)">Copy output</button></div>
+      <div class="encode-decode-container"><div class="encode-decode-panel"><h3>Input</h3><textarea id="encIn"></textarea></div>
+      <div class="encode-decode-panel"><h3>Output</h3><div class="result-box" id="encOut"></div></div></div></div></div>
+
+    <div class="tool-view" id="hashView"><div class="view-pad hash-container">
+      <h2>Hash Generator</h2><textarea id="hashIn" placeholder="Type or paste text" oninput="hashRun()"></textarea>
+      <div class="row"><select id="hashAlg" style="width:auto" onchange="hashRun()"><option>SHA-256</option><option>SHA-1</option><option>SHA-512</option></select><button class="btn" onclick="copyText(hashOut.textContent)">Copy hash</button></div>
+      <div class="result-box" id="hashOut" style="min-height:70px;font-family:ui-monospace,monospace"></div></div></div>
+
+    <div class="tool-view" id="gradientView"><div class="view-pad gradient-container">
+      <h2>Gradient Maker</h2><div class="grad-preview" id="gradPrev"></div>
+      <div class="row" style="align-items:center"><input type="color" id="g1" value="#c8202e" oninput="gradRun()"><input type="color" id="g2" value="#f2b83b" oninput="gradRun()">
+      <label style="flex:1;min-width:160px">Angle: <b id="gAngVal">135</b>°<input type="range" id="gAng" min="0" max="360" value="135" oninput="gradRun()"></label></div>
+      <div class="result-box" id="gradCss" style="min-height:0"></div>
+      <div class="row"><button class="btn primary" onclick="copyText(gradCss.textContent)">Copy CSS</button></div></div></div>
+
+    <div class="tool-view" id="calcView"><div class="view-pad"><h2>Calculator</h2>
+      <div class="pw-out" id="calcDisp" style="text-align:right;font-size:1.8rem;color:#fff">0</div>
+      <div class="calc-grid" id="calcKeys"></div></div></div>
+
+    <div class="tool-view" id="unitView"><div class="view-pad"><h2>Unit Converter</h2>
+      <div class="row"><select id="uCat" style="width:auto" onchange="unitFill()"><option value="length">Length</option><option value="weight">Weight</option><option value="volume">Volume</option><option value="temp">Temperature</option></select></div>
+      <div class="row"><input id="uVal" type="number" value="1" style="flex:1;min-width:120px" oninput="unitRun()"><select id="uFrom" style="flex:1;min-width:120px" onchange="unitRun()"></select><select id="uTo" style="flex:1;min-width:120px" onchange="unitRun()"></select></div>
+      <div class="pw-out" id="uOut"></div></div></div>
+
+    <div class="tool-view" id="tipView"><div class="view-pad"><h2>Tip &amp; Split</h2>
+      <div class="mini-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+      <label>Bill<input id="tBill" type="number" min="0" step="0.01" placeholder="0.00" oninput="tipRun()"></label>
+      <label>Tip %<input id="tPct" type="number" min="0" value="15" oninput="tipRun()"></label>
+      <label>People<input id="tPpl" type="number" min="1" value="1" oninput="tipRun()"></label></div>
+      <div class="result-box" id="tOut" style="min-height:0;margin-top:16px">Enter a bill amount.</div></div></div>
+
+    <div class="tool-view" id="percentView"><div class="view-pad"><h2>Percentage</h2>
+      <div class="row" style="align-items:center"><span>What is</span><input id="p1" type="number" style="width:100px" oninput="pctRun()"><span>% of</span><input id="p2" type="number" style="width:120px" oninput="pctRun()"><b id="pR1"></b></div>
+      <div class="row" style="align-items:center"><span>Change from</span><input id="p3" type="number" style="width:110px" oninput="pctRun()"><span>to</span><input id="p4" type="number" style="width:110px" oninput="pctRun()"><b id="pR2"></b></div>
+      <div class="row" style="align-items:center"><span>Price</span><input id="p5" type="number" style="width:110px" oninput="pctRun()"><span>with</span><input id="p6" type="number" style="width:90px" oninput="pctRun()"><span>% off</span><b id="pR3"></b></div></div></div>
+
+    <div class="tool-view" id="wordView"><div class="view-pad"><h2>Word Counter</h2>
+      <textarea id="wIn" placeholder="Type or paste text" oninput="wordRun()"></textarea>
+      <div class="result-box" id="wOut" style="min-height:0;margin-top:14px">0 words · 0 characters</div>
+      <div class="row"><button class="btn" onclick="caseRun('upper')">UPPERCASE</button><button class="btn" onclick="caseRun('lower')">lowercase</button><button class="btn" onclick="caseRun('title')">Title Case</button><button class="btn" onclick="caseRun('sentence')">Sentence case</button><button class="btn" onclick="copyText(wIn.value)">Copy text</button></div></div></div>
+
+    <div class="tool-view" id="countdownView"><div class="view-pad"><h2>Countdown Timer</h2>
+      <div class="display-time" id="cdDisp">00:05:00</div>
+      <div class="row" style="justify-content:center;align-items:center"><input id="cdH" type="number" min="0" max="99" value="0" style="width:90px"><span>hr</span><input id="cdM" type="number" min="0" value="5" style="width:90px"><span>min</span><input id="cdS" type="number" min="0" max="59" value="0" style="width:90px" oninput="wrapSec()"><span>sec</span></div>
+      <div class="row" style="justify-content:center"><button class="btn primary" id="cdBtn" onclick="cdToggle()">Start</button><button class="btn" onclick="cdReset()">Reset</button></div></div></div>
+
+    <div class="tool-view" id="randomView"><div class="view-pad"><h2>Dice, Coin &amp; Picker</h2>
+      <div class="row" style="align-items:center"><select id="dSides" style="width:auto"><option>4</option><option>6</option><option selected>6</option><option>8</option><option>10</option><option>12</option><option>20</option></select><input id="dCount" type="number" min="1" max="10" value="1" style="width:80px"><button class="btn primary" onclick="rollDice()">Roll dice</button><button class="btn" onclick="flipCoin()">Flip coin</button></div>
+      <div class="pw-out" id="rOut" style="font-size:1.6rem">Roll or flip</div>
+      <textarea id="pickList" placeholder="One option per line, then pick a winner" style="min-height:120px;margin-top:16px"></textarea>
+      <div class="row"><button class="btn primary" onclick="pickOne()">Pick one</button></div></div></div>
+
+    <div class="tool-view" id="dateView"><div class="view-pad"><h2>Date Calculator</h2>
+      <div class="row" style="align-items:center"><span>From</span><input id="dA" type="date" style="width:auto" oninput="dateRun()"><span>to</span><input id="dB" type="date" style="width:auto" oninput="dateRun()"></div>
+      <div class="result-box" id="dOut" style="min-height:0">Pick two dates.</div>
+      <div class="row" style="align-items:center;margin-top:20px"><span>Add</span><input id="dN" type="number" value="30" style="width:90px" oninput="dateRun()"><span>days to the first date:</span><b id="dAdd"></b></div></div></div>
+
+
+    <div class="tool-view" id="cooldownView"><div class="view-pad"><h2>Cooldown / Respawn Tracker</h2>
+      <div class="row" style="align-items:center"><input id="ckName" placeholder="Name (e.g. Boss respawn)" style="flex:1;min-width:150px"><input id="ckM" type="number" min="0" value="5" style="width:80px"><span>min</span><input id="ckS" type="number" min="0" max="59" value="0" style="width:80px"><span>sec</span><button class="btn primary" onclick="ckAdd()">Add</button></div>
+      <div id="ckList"></div></div></div>
+
+    <div class="tool-view" id="sessionView"><div class="view-pad"><h2>Gaming Session Reminder</h2>
+      <div class="row" style="align-items:center"><span>Play for</span><input id="sessH" type="number" min="0" value="1" style="width:80px" oninput="sesTick()"><span>hr</span><input id="sessM" type="number" min="0" value="0" style="width:80px" oninput="sesTick()"><span>min</span></div>
+      <div class="row" style="align-items:center"><span>Warn me</span><input id="sessW" type="number" min="0" value="10" style="width:80px"><span>min before the end</span></div>
+      <div class="display-time" id="sessDisp">01:00:00</div>
+      <div class="result-box" id="sessMsg" style="min-height:0;text-align:center">Set a limit and press start</div>
+      <div class="row" style="justify-content:center;align-items:center"><button class="btn primary" id="sessBtn" onclick="sesToggle()">Start session</button><button class="btn" onclick="sesReset()">Reset</button><span id="sessElapsed" style="color:var(--muted)">Played: 00:00:00</span></div></div></div>
+
+    <div class="tool-view" id="worldView"><div class="view-pad"><h2>World Clock</h2>
+      <canvas id="wcGlobe" width="380" height="380" aria-label="Globe. Drag to rotate, tap a dot to select a city."></canvas>
+      <div class="row" style="justify-content:center"><button class="btn" onclick="wcSpin(-20,0)">Left</button><button class="btn" onclick="wcSpin(0,15)">Up</button><button class="btn" onclick="wcSpin(0,-15)">Down</button><button class="btn" onclick="wcSpin(20,0)">Right</button></div>
+      <p style="text-align:center;color:var(--muted);font-size:.8rem;margin-top:4px">Drag the globe or use the buttons. On a controller, the right stick spins it. Pick a city to jump to it.</p>
+      <div class="section-label" style="margin-top:24px"><span>Locations</span><i class="line"></i></div>
+      <div class="wc-box"><div class="row" style="margin-top:0"><select id="wcAdd" style="flex:1"></select><button class="btn primary" onclick="wcAddCity()">Add city</button></div><div id="wcList"></div></div></div></div>
+
+    <div class="tool-view" id="updatesView"><div class="view-pad"><h2>Updates</h2><div id="updList"></div></div></div>
+
+  </main>
+  <div class="toast" id="toast">Copied</div>
+
+<script>
+const $=id=>document.getElementById(id);
+function openTool(id){$('toolsGrid').classList.add('hidden');$('toolsGrid2').classList.add('hidden');$('timersGrid').classList.add('hidden');$('numbersGrid').classList.add('hidden');$('numbersLabel').style.display='none';$('timersLabel').style.display='none';$('toolsLabel').style.display='none';$('toolsLabel2').style.display='none';$('sitesSection').style.display='none';$('searchBarContainer').style.display='none';$('emptyMsg').style.display='none';document.querySelectorAll('.tool-view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');$('backBtn').style.display='inline-block';window.scrollTo(0,0)}
+function showGrid(){document.querySelectorAll('.tool-view').forEach(v=>v.classList.remove('active'));$('toolsGrid').classList.remove('hidden');$('toolsGrid2').classList.remove('hidden');$('timersGrid').classList.remove('hidden');$('numbersGrid').classList.remove('hidden');$('numbersLabel').style.display='';$('timersLabel').style.display='';$('toolsLabel').style.display='';$('toolsLabel2').style.display='';$('sitesSection').style.display='';$('searchBarContainer').style.display='';$('backBtn').style.display='none';filterTools()}
+function filterTools(){const q=$('toolSearch').value.trim().toLowerCase();document.body.classList.toggle('searching',!!q);
+  const run=(sel,fn)=>{let c=0;document.querySelectorAll(sel).forEach(e=>{const m=fn(e);e.classList.toggle('hidden',!m);if(m)c++});return c};
+  const has=c=>(c.dataset.name||'').includes(q);let total=0;
+  [['timersGrid','timersLabel'],['numbersGrid','numbersLabel'],['toolsGrid','toolsLabel'],['toolsGrid2','toolsLabel2']].forEach(g=>{const n=run('#'+g[0]+' .tool-card',has);total+=n;$(g[1]).style.display=n||!q?'':'none'});
+  const sn=run('#siteTiles .tool-card:not(.add)',c=>siteEdit||has(c));total+=sn;document.querySelectorAll('#siteTiles .site-group').forEach(w=>{w.style.display=(siteEdit||w.querySelector('.tool-card:not(.hidden)'))?'':'none'});$('sitesSection').style.display=sn||!q?'':'none';
+  $('emptyMsg').style.display=total?'none':'block'}
+function copyText(t){const done=()=>{const e=$('toast');e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1200)};
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>{});else{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove();done()}}
+// Stopwatch
+let swT=0,swS=0,swI=null,swLaps=[];
+const fmt=ms=>{const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),c=Math.floor(ms%1000/10);return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+'.'+String(c).padStart(2,'0')};
+function swToggle(){if(swI){clearInterval(swI);swI=null;swT+=Date.now()-swS;$('swStart').textContent='Resume'}else{swS=Date.now();swI=setInterval(()=>$('swDisplay').textContent=fmt(swT+Date.now()-swS),30);$('swStart').textContent='Pause'}}
+function swLap(){const t=swT+(swI?Date.now()-swS:0);if(!t)return;swLaps.push(t);$('laps').innerHTML=swLaps.map((l,i)=>`<div class="lap-item"><span>Lap ${i+1}</span><span>${fmt(l)}</span></div>`).reverse().join('')}
+function swReset(){clearInterval(swI);swI=null;swT=0;swLaps=[];$('swDisplay').textContent='00:00.00';$('swStart').textContent='Start';$('laps').innerHTML=''}
+// Password
+function genPw(){const sets=[['pwU','ABCDEFGHIJKLMNOPQRSTUVWXYZ'],['pwL','abcdefghijklmnopqrstuvwxyz'],['pwN','0123456789'],['pwS','!@#$%^&*()-_=+[]{};:,.?']].filter(s=>$(s[0]).checked).map(s=>s[1]);
+  if(!sets.length){$('pwOut').textContent='Select at least one character type';return}
+  const len=+$('pwLen').value,all=sets.join(''),r=new Uint32Array(len+sets.length);crypto.getRandomValues(r);
+  let out=sets.map((s,i)=>s[r[i]%s.length]);for(let i=0;out.length<len;i++)out.push(all[r[sets.length+i]%all.length]);
+  for(let i=out.length-1;i>0;i--){const j=crypto.getRandomValues(new Uint32Array(1))[0]%(i+1);[out[i],out[j]]=[out[j],out[i]]}
+  $('pwOut').textContent=out.join('')}
+// JSON
+function jsonRun(sp){const o=$('jsonOut');try{const v=JSON.parse($('jsonIn').value);o.className='json-output json-success';o.textContent=JSON.stringify(v,null,sp||0)}catch(e){o.className='json-output json-error';o.textContent='Invalid JSON: '+e.message}}
+// Encode
+function encRun(enc){const t=$('encIn').value,m=$('encMode').value;try{let r;
+  if(m==='b64')r=enc?btoa(String.fromCharCode(...new TextEncoder().encode(t))):new TextDecoder().decode(Uint8Array.from(atob(t.trim()),c=>c.charCodeAt(0)));
+  else r=enc?encodeURIComponent(t):decodeURIComponent(t);$('encOut').textContent=r}catch(e){$('encOut').textContent='Could not '+(enc?'encode':'decode')+' this input: '+e.message}}
+// Hash
+async function hashRun(){const t=$('hashIn').value;if(!t){$('hashOut').textContent='';return}
+  const b=await crypto.subtle.digest($('hashAlg').value,new TextEncoder().encode(t));$('hashOut').textContent=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+// Gradient
+function gradRun(){const css=`background: linear-gradient(${$('gAng').value}deg, ${$('g1').value}, ${$('g2').value});`;$('gAngVal').textContent=$('gAng').value;$('gradPrev').style.cssText=css;$('gradCss').textContent=css}
+
+// Calculator
+let ce='';const cd=$('calcDisp');
+['C','⌫','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','(',')','='].forEach(k=>{const b=document.createElement('button');b.className='btn'+(k==='='?' primary':'');b.textContent=k;b.onclick=()=>calcKey(k);$('calcKeys').appendChild(b)});
+function calcKey(k){if(k==='C')ce='';else if(k==='⌫')ce=ce.slice(0,-1);else if(k==='='){try{const e=ce.replace(/÷/g,'/').replace(/×/g,'*').replace(/−/g,'-').replace(/(\d+\.?\d*)%/g,'($1/100)');if(!/^[0-9+\-*\/().\s]+$/.test(e))throw 0;const r=Function('return '+e)();ce=isFinite(r)?String(+r.toFixed(10)):'';if(!isFinite(r))cd.textContent='Error'; if(ce)cd.textContent=ce;return}catch(x){cd.textContent='Error';ce='';return}}else ce+=k;cd.textContent=ce||'0'}
+// Units
+const U={length:{m:1,km:1000,cm:.01,mm:.001,mile:1609.344,yard:.9144,foot:.3048,inch:.0254},weight:{kg:1,g:.001,lb:.45359237,oz:.028349523},volume:{L:1,mL:.001,'US gallon':3.785411784,'US cup':.2365882365,'fl oz':.0295735296,'tbsp':.0147867648,'tsp':.00492892159},temp:{'°C':1,'°F':1,K:1}};
+function unitFill(){const k=Object.keys(U[$('uCat').value]);$('uFrom').innerHTML=$('uTo').innerHTML=k.map(x=>`<option>${x}</option>`).join('');$('uTo').selectedIndex=1;unitRun()}
+function unitRun(){const c=$('uCat').value,v=parseFloat($('uVal').value),f=$('uFrom').value,t=$('uTo').value;if(isNaN(v)){$('uOut').textContent='';return}let r;
+  if(c==='temp'){const cel=f==='°C'?v:f==='°F'?(v-32)*5/9:v-273.15;r=t==='°C'?cel:t==='°F'?cel*9/5+32:cel+273.15}else r=v*U[c][f]/U[c][t];
+  $('uOut').textContent=`${v} ${f} = ${+r.toPrecision(8)} ${t}`}
+// Tip
+function tipRun(){const b=+$('tBill').value,p=+$('tPct').value,n=Math.max(1,+$('tPpl').value||1);if(!b){$('tOut').textContent='Enter a bill amount.';return}const tip=b*p/100,tot=b+tip;$('tOut').innerHTML=`Tip: <b>${tip.toFixed(2)}</b><br>Total: <b>${tot.toFixed(2)}</b><br>Each of ${n}: <b>${(tot/n).toFixed(2)}</b>`}
+// Percent
+function pctRun(){const g=i=>parseFloat($(i).value),f=x=>'= '+(+x.toFixed(4));
+  $('pR1').textContent=isNaN(g('p1')+g('p2'))?'':f(g('p1')/100*g('p2'));
+  $('pR2').textContent=isNaN(g('p3')+g('p4'))||!g('p3')?'':f((g('p4')-g('p3'))/g('p3')*100)+'%';
+  $('pR3').textContent=isNaN(g('p5')+g('p6'))?'':f(g('p5')*(1-g('p6')/100))}
+// Words
+function wordRun(){const t=$('wIn').value,w=t.trim()?t.trim().split(/\s+/).length:0;$('wOut').textContent=`${w} words · ${t.length} characters · ${t.replace(/\s/g,'').length} without spaces`}
+function caseRun(m){let t=$('wIn').value;t=m==='upper'?t.toUpperCase():m==='lower'?t.toLowerCase():m==='title'?t.toLowerCase().replace(/(^|\s)\S/g,x=>x.toUpperCase()):t.toLowerCase().replace(/(^\s*|[.!?]\s+)(\w)/g,(a,b,c)=>b+c.toUpperCase());$('wIn').value=t;wordRun()}
+// Countdown
+function wrapSec(){const e=$('cdS');if(e.value==='')return;const v=parseInt(e.value,10);if(v>59)e.value=0;else if(v<0)e.value=59}
+let cdI=null,cdLeft=0;const p2=n=>String(n).padStart(2,'0'),cdTotal=()=>(+$('cdH').value||0)*3600+(+$('cdM').value||0)*60+(+$('cdS').value||0),cdShow=()=>$('cdDisp').textContent=p2(Math.floor(cdLeft/3600))+':'+p2(Math.floor(cdLeft%3600/60))+':'+p2(cdLeft%60);
+function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator();o.connect(a.destination);o.frequency.value=880;o.start();setTimeout(()=>o.stop(),700)}catch(e){}}
+function cdToggle(){if(cdI){clearInterval(cdI);cdI=null;$('cdBtn').textContent='Resume';return}
+  if(!cdLeft)cdLeft=cdTotal();if(!cdLeft)return;cdShow();$('cdBtn').textContent='Pause';
+  cdI=setInterval(()=>{cdLeft--;cdShow();if(cdLeft<=0){clearInterval(cdI);cdI=null;$('cdBtn').textContent='Start';beep();$('toast').textContent='Time is up';$('toast').classList.add('show');setTimeout(()=>{$('toast').classList.remove('show');$('toast').textContent='Copied'},3000)}},1000)}
+function cdReset(){clearInterval(cdI);cdI=null;cdLeft=cdTotal();cdShow();$('cdBtn').textContent='Start';cdLeft=0}
+// Random
+const rnd=n=>crypto.getRandomValues(new Uint32Array(1))[0]%n;
+function rollDice(){const n=Math.min(10,Math.max(1,+$('dCount').value||1)),s=+$('dSides').value,r=Array.from({length:n},()=>rnd(s)+1);$('rOut').textContent=r.join(' + ')+(n>1?' = '+r.reduce((a,b)=>a+b):'')}
+function flipCoin(){$('rOut').textContent=rnd(2)?'Heads':'Tails'}
+function pickOne(){const l=$('pickList').value.split('\n').map(x=>x.trim()).filter(Boolean);$('rOut').textContent=l.length?l[rnd(l.length)]:'Add at least one option'}
+// Dates
+function dateRun(){const a=$('dA').value,b=$('dB').value;
+  if(a&&b){const d=Math.round((new Date(b)-new Date(a))/864e5);$('dOut').textContent=`${Math.abs(d)} days (${(Math.abs(d)/7).toFixed(1)} weeks)${d<0?' — second date is earlier':''}`}
+  if(a&&$('dN').value!==''){const x=new Date(a+'T00:00:00');x.setDate(x.getDate()+(+$('dN').value));$('dAdd').textContent=x.toDateString()}else $('dAdd').textContent=''}
+
+/* Default tiles. Edit here, or use the Edit button in the Website Picker. */
+const DEFAULT_SITES=[
+  {name:'Google',group:'Search & Learn',url:'https://google.com',icon:'🔎'},
+  {name:'YouTube',group:'Video & Streaming',url:'https://youtube.com',icon:'▶️'},
+  {name:'Wikipedia',group:'Search & Learn',url:'https://wikipedia.org',icon:'📚'},
+  {name:'GitHub',group:'Search & Learn',url:'https://github.com',icon:'🐙'},
+  {name:'Reddit',group:'Social & Chat',url:'https://reddit.com',icon:'💬'},
+  {name:'DuckDuckGo',group:'Search & Learn',url:'https://duckduckgo.com',icon:'🦆'},
+  {name:'Instagram',group:'Social & Chat',url:'https://instagram.com',icon:'📸'},
+  {name:'Twitter',group:'Social & Chat',url:'https://x.com',icon:'🐦'},
+  {name:'TikTok',group:'Video & Streaming',url:'https://tiktok.com',icon:'🎵'},
+  {name:'Facebook',group:'Social & Chat',url:'https://facebook.com',icon:'👍'},
+  {name:'Discord',group:'Social & Chat',url:'https://discord.com',icon:'🎮'},
+  {name:'Twitch',group:'Video & Streaming',url:'https://twitch.tv',icon:'🟣'}
+];
+let SITES=DEFAULT_SITES.map(x=>({...x})),siteEdit=false,siteIdx=-1;
+try{const v=JSON.parse(localStorage.getItem('siteTiles')||'null');
+  if(Array.isArray(v)){SITES=v;let seen=null;try{seen=JSON.parse(localStorage.getItem('siteTilesSeen')||'null')}catch(e){}
+    if(!Array.isArray(seen))seen=DEFAULT_SITES.slice(0,6).map(x=>x.url);
+    DEFAULT_SITES.forEach(d=>{if(!seen.includes(d.url)){seen.push(d.url);if(!SITES.some(x=>x.url===d.url))SITES.push({...d})}});
+    localStorage.setItem('siteTilesSeen',JSON.stringify(seen));siteStore()}}catch(e){}
+SITES.forEach(x=>{if(x.name==='X'&&/^https?:\/\/(www\.)?x\.com\/?$/i.test(x.url)){x.name='Twitter';if(x.icon==='✖️')x.icon='🐦'}});
+SITES.forEach(x=>{delete x.locked;if(!x.group){const d=DEFAULT_SITES.find(q=>q.url===x.url);x.group=d?d.group:'My Sites'}});siteStore();
+function siteStore(){try{localStorage.setItem('siteTiles',JSON.stringify(SITES))}catch(e){}}
+function siteNorm(v){v=(v||'').trim();if(!v)return null;if(!/^https?:\/\//i.test(v)){if(/^[a-z][a-z0-9+.-]*:(?!\d)/i.test(v))return null;v='https://'+v}
+  try{const u=new URL(v);return /^https?:$/.test(u.protocol)&&(u.hostname.includes('.')||u.hostname==='localhost')?u.href:null}catch(e){return null}}
+function siteShort(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}}
+function siteRender(){const g=$('siteTiles');g.innerHTML='';const grids={};const gridFor=n=>{n=n||'My Sites';if(!grids[n]){const w=document.createElement('div');w.className='site-group';const l=document.createElement('div');l.className='sub-label';const sp=document.createElement('span');sp.textContent=n;const ln=document.createElement('i');ln.className='line';l.append(sp,ln);const gr=document.createElement('div');gr.className='tools-grid';w.append(l,gr);g.appendChild(w);grids[n]=gr}return grids[n]};
+  SITES.forEach((x,i)=>{const a=document.createElement(siteEdit?'div':'a');a.className='tool-card'+(siteEdit?' editing':'');a.dataset.name=(x.name+' '+x.url+' '+(x.group||'')).toLowerCase();a.dataset.idx=i;
+    if(siteEdit){a.tabIndex=0;a.setAttribute('role','button');a.onclick=()=>{if(Date.now()-siteDragEnd<400)return;siteOpenForm(i)};a.onkeydown=e=>{if(e.key==='Enter')siteOpenForm(i)}}
+    else{a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';a.style.textDecoration='none';a.style.color='inherit'}
+    const ic=document.createElement('div');ic.className='tool-icon';ic.textContent=x.icon||'🌐';
+    const nm=document.createElement('div');nm.className='tool-name';nm.textContent=x.name;
+    const ds=document.createElement('div');ds.className='tool-description';ds.textContent=siteShort(x.url);
+    a.append(ic,nm);
+    if(siteEdit){const d=document.createElement('button');d.className='del';d.textContent='×';d.title='Remove';d.setAttribute('aria-label','Remove '+x.name);d.onclick=e=>{e.stopPropagation();SITES.splice(i,1);siteStore();siteCloseForm();siteRender()};a.appendChild(d)}
+    a.appendChild(ds);gridFor(x.group).appendChild(a)});
+  if(siteEdit){const a=document.createElement('div');a.className='tool-card add';a.tabIndex=0;a.setAttribute('role','button');a.textContent='+ Add site';a.onclick=()=>siteOpenForm(-1);a.onkeydown=e=>{if(e.key==='Enter')siteOpenForm(-1)};const w=document.createElement('div');w.className='tools-grid';w.style.marginTop='14px';w.appendChild(a);g.appendChild(w)}filterTools()}
+function siteToggleEdit(){siteEdit=!siteEdit;if(siteEdit&&SEC_OFF.indexOf('sites')>-1)secToggle('sites');$('siteEditBtn').textContent=siteEdit?'✓ Done':'✎ Edit';if(!siteEdit)siteCloseForm();$('siteHint').style.display=siteEdit?'block':'none';siteRender()}
+function siteOpenForm(i){siteIdx=i;const x=SITES[i]||{name:'',url:'',icon:''};$('sfIcon').value=x.icon||'';$('sfGroup').value=x.group||'';$('sfGroups').innerHTML=[...new Set(SITES.map(q=>q.group).filter(Boolean))].map(n=>'<option value="'+escH(n)+'">').join('');$('sfName').value=x.name;$('sfUrl').value=x.url;$('sfErr').textContent='';$('siteForm').classList.add('show');$('sfName').focus()}
+function siteCloseForm(){siteIdx=-1;$('siteForm').classList.remove('show')}
+function siteSaveForm(){const u=siteNorm($('sfUrl').value);if(!u){$('sfErr').textContent='Enter a valid website address (http or https).';return}
+  const x={name:$('sfName').value.trim()||siteShort(u),url:u,icon:$('sfIcon').value.trim()||'🌐',group:$('sfGroup').value.trim()||'My Sites'};
+  if(siteIdx>=0)SITES[siteIdx]=x;else SITES.push(x);siteStore();siteCloseForm();siteRender()}
+function siteReset(){if(!confirm('Reset all tiles to the defaults?'))return;SITES=DEFAULT_SITES.map(x=>({...x}));siteStore();try{localStorage.setItem('siteTilesSeen',JSON.stringify(DEFAULT_SITES.map(x=>x.url)))}catch(e){}siteCloseForm();siteRender()}
+siteRender();
+unitFill();
+let CLK_TZ='';try{CLK_TZ=localStorage.getItem('clockTz')||''}catch(e){}
+function tick(){const d=new Date();let o=CLK_TZ?{timeZone:CLK_TZ}:{},tz='';
+  try{new Intl.DateTimeFormat([],o)}catch(e){CLK_TZ='';o={}}
+  $('clkTime').textContent=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit',...o});
+  try{const p=new Intl.DateTimeFormat([],{timeZoneName:'short',...o}).formatToParts(d).find(x=>x.type==='timeZoneName');tz=p?' · '+p.value:''}catch(e){}
+  $('clkDate').textContent=d.toLocaleDateString([],{weekday:'long',month:'long',day:'numeric',year:'numeric',...o})+tz}
+function tzFill(){const sel=$('clkTz');let zones=[];try{zones=Intl.supportedValuesOf('timeZone')}catch(e){}
+  if(!zones.length)zones=['America/St_Johns','America/Halifax','America/New_York','America/Chicago','America/Denver','America/Los_Angeles','America/Anchorage','Pacific/Honolulu','UTC','Europe/London','Europe/Paris','Europe/Moscow','Asia/Dubai','Asia/Kolkata','Asia/Shanghai','Asia/Tokyo','Australia/Sydney','Pacific/Auckland'];
+  let dev='';try{dev=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}
+  sel.innerHTML='<option value="">Device default'+(dev?' ('+dev+')':'')+'</option>'+zones.map(z=>`<option value="${z}">${z.replace(/_/g,' ')}</option>`).join('');sel.value=CLK_TZ}
+function tzToggle(){$('clkTz').classList.toggle('show')}
+function tzSet(v){CLK_TZ=v;try{localStorage.setItem('clockTz',v)}catch(e){}tick();$('clkTz').classList.remove('show')}
+tzFill();tick();setInterval(tick,1000);
+gradRun();genPw();
+
+// ===== Shared helpers =====
+const escH=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hms=t=>{t=Math.max(0,Math.ceil(t));return p2(Math.floor(t/3600))+':'+p2(Math.floor(t%3600/60))+':'+p2(t%60)};
+function note(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>{t.classList.remove('show');t.textContent='Copied'},3000)}
+// ===== Cooldown / respawn tracker =====
+let CK=[];try{const v=JSON.parse(localStorage.getItem('cooldowns')||'[]');if(Array.isArray(v))CK=v.filter(x=>x&&x.name&&x.dur>0).map(x=>({name:String(x.name).slice(0,40),dur:+x.dur,end:null}))}catch(e){}
+function ckSave(){try{localStorage.setItem('cooldowns',JSON.stringify(CK.map(x=>({name:x.name,dur:x.dur}))))}catch(e){}}
+function ckAdd(){const d=(+$('ckM').value||0)*60+(+$('ckS').value||0);if(d<=0){note('Set a time first');return}CK.push({name:($('ckName').value.trim()||'Timer').slice(0,40),dur:d,end:null});$('ckName').value='';ckSave();ckRender()}
+function ckRender(){const l=$('ckList');if(!CK.length){l.innerHTML='<div class="empty" style="display:block;padding:24px 0">No timers yet. Add one above.</div>';return}
+  l.innerHTML=CK.map((x,i)=>`<div class="ck-row" id="ckR${i}"><span class="n">${escH(x.name)}</span><span class="t" id="ckT${i}">${hms(x.dur)}</span><button class="btn primary" onclick="ckGo(${i})">Start</button><button class="btn" onclick="ckReset(${i})">Reset</button><button class="btn" aria-label="Remove ${escH(x.name)}" onclick="ckDel(${i})">×</button></div>`).join('')}
+function ckGo(i){CK[i].end=Date.now()+CK[i].dur*1000;CK[i].fired=false;ckTick()}
+function ckReset(i){CK[i].end=null;ckTick()}
+function ckDel(i){CK.splice(i,1);ckSave();ckRender()}
+function ckTick(){CK.forEach((x,i)=>{const t=$('ckT'+i),r=$('ckR'+i);if(!t)return;let left=x.end?(x.end-Date.now())/1000:x.dur;const rd=!!x.end&&left<=0;
+  if(rd&&!x.fired){x.fired=true;beep();note(x.name+' is ready')}
+  t.textContent=rd?'READY':hms(left);r.classList.toggle('done',rd)})}
+// ===== Gaming session reminder =====
+let ses={run:false,start:0,acc:0,warned:false,done:false};
+const sesLimit=()=>((+$('sessH').value||0)*3600+(+$('sessM').value||0)*60)*1000,sesElapsed=()=>ses.acc+(ses.run?Date.now()-ses.start:0);
+function sesToggle(){if(ses.run){ses.acc+=Date.now()-ses.start;ses.run=false;$('sessBtn').textContent='Resume';sesTick();return}
+  if(!sesLimit()){note('Set a play limit first');return}
+  if(ses.done)sesReset();ses.start=Date.now();ses.run=true;$('sessBtn').textContent='Pause';sesTick()}
+function sesReset(){ses={run:false,start:0,acc:0,warned:false,done:false};$('sessBtn').textContent='Start session';sesTick()}
+function sesTick(){const L=sesLimit(),e=sesElapsed(),left=Math.max(0,L-e)/1000,W=(+$('sessW').value||0)*60;
+  if(ses.run&&L&&e>=L&&!ses.done){ses.done=true;ses.run=false;ses.acc=L;$('sessBtn').textContent='Start session';beep();setTimeout(beep,900);note("Time's up. Take a break!")}
+  else if(ses.run&&W&&left<=W&&!ses.warned){ses.warned=true;beep();note(Math.ceil(left/60)+' min left in your session')}
+  $('sessDisp').textContent=hms(left);$('sessElapsed').textContent='Played: '+hms(sesElapsed()/1000);
+  $('sessMsg').textContent=ses.done?'Session over. Time for a break.':ses.run?(W&&left<=W?'Almost out of time...':'Playing...'):(e?'Paused':'Set a limit and press start')}
+// ===== World clock + globe =====
+const WC_CITIES=[["NL&LB","America/St_Johns",47.56,-52.71],["Halifax","America/Halifax",44.65,-63.58],["Toronto","America/Toronto",43.65,-79.38],["New York","America/New_York",40.71,-74.01],["Chicago","America/Chicago",41.88,-87.63],["Denver","America/Denver",39.74,-104.99],["Los Angeles","America/Los_Angeles",34.05,-118.24],["Anchorage","America/Anchorage",61.22,-149.9],["Honolulu","Pacific/Honolulu",21.31,-157.86],["Mexico City","America/Mexico_City",19.43,-99.13],["Sao Paulo","America/Sao_Paulo",-23.55,-46.63],["Buenos Aires","America/Argentina/Buenos_Aires",-34.6,-58.38],["London","Europe/London",51.51,-0.13],["Paris","Europe/Paris",48.86,2.35],["Berlin","Europe/Berlin",52.52,13.4],["Moscow","Europe/Moscow",55.76,37.62],["Cairo","Africa/Cairo",30.04,31.24],["Lagos","Africa/Lagos",6.52,3.38],["Johannesburg","Africa/Johannesburg",-26.2,28.05],["Dubai","Asia/Dubai",25.2,55.27],["Mumbai","Asia/Kolkata",19.08,72.88],["Bangkok","Asia/Bangkok",13.76,100.5],["Singapore","Asia/Singapore",1.35,103.82],["Beijing","Asia/Shanghai",39.9,116.41],["Seoul","Asia/Seoul",37.57,126.98],["Tokyo","Asia/Tokyo",35.68,139.65],["Sydney","Australia/Sydney",-33.87,151.21],["Auckland","Pacific/Auckland",-36.85,174.76],["Vancouver","America/Vancouver",49.28,-123.12],["Miami","America/New_York",25.76,-80.19],["Bogota","America/Bogota",4.71,-74.07],["Lima","America/Lima",-12.05,-77.04],["Santiago","America/Santiago",-33.45,-70.67],["Reykjavik","Atlantic/Reykjavik",64.15,-21.94],["Madrid","Europe/Madrid",40.42,-3.7],["Rome","Europe/Rome",41.9,12.5],["Istanbul","Europe/Istanbul",41.01,28.98],["Casablanca","Africa/Casablanca",33.57,-7.59],["Nairobi","Africa/Nairobi",-1.29,36.82],["Tehran","Asia/Tehran",35.69,51.39],["Karachi","Asia/Karachi",24.86,67.0],["Delhi","Asia/Kolkata",28.61,77.21],["Dhaka","Asia/Dhaka",23.81,90.41],["Jakarta","Asia/Jakarta",-6.2,106.85],["Manila","Asia/Manila",14.6,120.98],["Hong Kong","Asia/Hong_Kong",22.32,114.17],["Perth","Australia/Perth",-31.95,115.86],["Melbourne","Australia/Melbourne",-37.81,144.96]];
+const WC_LAND=[[[70,-160],[72,-125],[68,-95],[60,-95],[58,-78],[63,-65],[52,-56],[47,-53],[44,-66],[35,-76],[25,-80],[30,-90],[26,-97],[20,-97],[15,-92],[8,-80],[18,-105],[24,-112],[32,-117],[40,-124],[48,-124],[58,-136],[60,-150],[56,-165],[65,-168]],[[83,-35],[76,-60],[65,-52],[60,-44],[70,-22],[80,-18]],[[12,-72],[10,-62],[0,-50],[-8,-35],[-23,-42],[-35,-57],[-41,-62],[-54,-68],[-50,-75],[-37,-73],[-18,-70.3],[-12,-77.5],[-5,-81],[3,-78],[9,-77]],[[36,-9],[43,-9],[48,-5],[51,2],[57,8],[64,10],[71,25],[69,40],[73,70],[77,105],[72,130],[69,170],[64,178],[60,163],[52,157],[60,150],[55,135],[43,132],[35,129],[39,122],[31,121],[22,114],[10,108],[1,104],[8,98],[16,94],[22,91],[8,77],[20,73],[25,66],[26,57],[24,52],[30,48],[22,59],[13,45],[28,34],[36,36],[37,27],[40,26],[38,23],[40,19],[44,12],[38,15],[44,8],[37,-2]],[[35,-6],[37,10],[31,32],[22,37],[12,43],[11,51],[0,42],[-11,41],[-26,33],[-34,26],[-34,18],[-18,12],[-5,12],[4,9],[5,-5],[12,-17],[21,-17],[28,-13],[33.6,-8.6],[35.8,-5.9]],[[-11,132],[-12,142],[-19,147],[-28,153.6],[-33.9,151.6],[-37.5,150],[-38.5,146],[-35,138],[-32,115],[-22,114],[-14,127]],[[45.5,141.9],[43,145.4],[41.5,141.5],[38.3,141.5],[35,140.9],[34.7,138.2],[33.5,135.8],[34.3,132.5],[34,130.9],[35.6,135.5],[37.5,137.2],[39.8,139.8],[41.4,140.2]],[[33.9,131],[31.2,130.6],[32.6,129.8]],[[58.6,-5],[57.6,-1.8],[55.5,-1.6],[53.5,0.2],[52.9,1.7],[51.4,1.4],[50.7,0.5],[50.1,-5.5],[51.6,-4.5],[53.4,-4.7],[54.7,-3.5],[55.8,-5.5],[57.5,-6]],[[55.2,-6.2],[54,-6],[52,-6.3],[51.5,-9.5],[53.5,-10],[55,-8]],[[22.2,-159.8],[22,-157.2],[19.2,-154.8],[18.8,-155.8],[20.5,-158.3]],[[-34.4,173],[-37,176.2],[-39.3,177.2],[-41.5,175.2],[-39.2,174.2],[-36.9,174.3]],[[-40.6,172.7],[-41.7,174.3],[-43.5,172.8],[-46.6,169],[-46.2,166.5],[-44,168.3],[-41.8,171.5]],[[51.6,-55.5],[49.5,-53.5],[48.5,-53],[47.65,-52.45],[46.7,-53.5],[47.6,-59.3],[49,-58.2],[50.5,-57]],[[30,48],[26,50.2],[25.4,51.5],[24,52],[24.5,54.4],[25.9,55.6],[26.2,56.4],[22.5,59.8],[17,55],[13,45],[17,42],[21,39],[28,34.8],[29.5,35],[30,38],[31,40],[30,44]],[[24,68.5],[22.3,69],[20.7,70.9],[21,72.6],[19,72.7],[15,73.7],[8.1,77.5],[10,79],[13,80.3],[16,81.5],[20,86.8],[22,88],[25,88],[28,80],[30,78],[28,72]],[[66.5,-22],[66,-15],[64.3,-14],[63.4,-19],[63.8,-22.7],[65,-24.3]],[[-6,105.9],[-6.1,108],[-6.7,111],[-6.9,114.5],[-8.7,114.4],[-8.2,111],[-7.8,108],[-7,105.5]],[[18.5,121],[16.5,122.3],[14,122],[13.5,123.8],[13,123.5],[13.8,120.6],[16,119.8]]];
+let wcSel=["NL&LB","London","Tokyo","Los Angeles"],wcFocus="",wcLat=25,wcLon=-40,wcAnim=0,wcHits=[];
+try{const v=JSON.parse(localStorage.getItem('worldCities')||'null');if(Array.isArray(v)&&v.length)wcSel=v.map(n=>n==="St. John's"||n==="Newfoundland and Labrador"?"NL&LB":n).filter(n=>WC_CITIES.some(c=>c[0]===n))}catch(e){}
+wcFocus=wcSel[0]||'';
+const RAD=Math.PI/180,wcCity=n=>WC_CITIES.find(c=>c[0]===n);
+function wcProj(la,lo){const p=la*RAD,d=(lo-wcLon)*RAD,p0=wcLat*RAD;return{x:Math.cos(p)*Math.sin(d),y:Math.cos(p0)*Math.sin(p)-Math.sin(p0)*Math.cos(p)*Math.cos(d),v:Math.sin(p0)*Math.sin(p)+Math.cos(p0)*Math.cos(p)*Math.cos(d)>0}}
+function wcDraw(){const c=$('wcGlobe'),g=c.getContext('2d'),W=c.width,cx=W/2,R=cx-12;g.clearRect(0,0,W,W);
+  g.save();g.beginPath();g.arc(cx,cx,R,0,7);g.fillStyle='#1a0a0b';g.fill();g.clip();
+  g.strokeStyle='rgba(242,184,59,.16)';g.lineWidth=1;
+  const line=(pts)=>{g.beginPath();let on=false;pts.forEach(([la,lo])=>{const q=wcProj(la,lo);if(q.v){const X=cx+R*q.x,Y=cx-R*q.y;on?g.lineTo(X,Y):g.moveTo(X,Y);on=true}else on=false});g.stroke()};
+  for(let lo=-180;lo<180;lo+=30){const a=[];for(let la=-90;la<=90;la+=5)a.push([la,lo]);line(a)}
+  for(let la=-60;la<=60;la+=30){const a=[];for(let lo=-180;lo<=180;lo+=5)a.push([la,lo]);line(a)}
+  g.fillStyle='#6b2a2d';g.strokeStyle='#c8202e';g.lineWidth=1.2;
+  WC_LAND.forEach(poly=>{const pts=poly.map(([la,lo])=>{const q=wcProj(la,lo);let x=q.x,y=q.y;if(!q.v){const l=Math.hypot(x,y)||1;x/=l;y/=l}return[cx+R*x,cx-R*y,q.v]});
+    if(!pts.some(p=>p[2]))return;g.beginPath();pts.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fill();g.stroke()});
+  g.restore();g.beginPath();g.arc(cx,cx,R,0,7);g.strokeStyle='#f2b83b';g.lineWidth=2;g.stroke();
+  wcHits=[];wcSel.forEach(n=>{const ct=wcCity(n),q=wcProj(ct[2],ct[3]);if(!q.v)return;const X=cx+R*q.x,Y=cx-R*q.y;wcHits.push([n,X,Y]);
+    g.beginPath();g.arc(X,Y,n===wcFocus?6:4,0,7);g.fillStyle=n===wcFocus?'#f2b83b':'#ff5a66';g.fill();g.strokeStyle='#140707';g.lineWidth=1.5;g.stroke();
+    if(n===wcFocus){g.beginPath();g.arc(X,Y,12,0,7);g.strokeStyle='#f2b83b';g.lineWidth=2;g.stroke();g.font='bold 14px system-ui,sans-serif';g.textAlign=X>cx?'right':'left';g.fillStyle='#fff4dc';g.strokeStyle='#140707';g.lineWidth=4;const tx=X+(X>cx?-16:16);g.strokeText(n,tx,Y+5);g.fillText(n,tx,Y+5)}})}
+function wcGo(n){const ct=wcCity(n);if(!ct)return;wcFocus=n;const id=++wcAnim;
+  (function s(){if(id!==wcAnim)return;const d=((ct[3]-wcLon+540)%360)-180;wcLon+=d*.15;wcLat+=(ct[2]-wcLat)*.15;wcDraw();if(Math.abs(d)>.2||Math.abs(ct[2]-wcLat)>.2)requestAnimationFrame(s)})();wcList()}
+function wcList(){$('wcList').innerHTML=wcSel.map((n,i)=>{const ct=wcCity(n);return`<div class="wc-row${n===wcFocus?' focus':''}" tabindex="0" onclick="wcGo(wcSel[${i}])" onkeydown="if(event.key==='Enter')wcGo(wcSel[${i}])"><span class="n">${escH(n)}<small class="wcd" data-tz="${ct[1]}"></small></span><span class="wct" data-tz="${ct[1]}"></span><button class="del" aria-label="Remove ${escH(n)}" onclick="event.stopPropagation();wcDel(${i})">×</button></div>`}).join('');wcTick(true)}
+function wcTick(f){if(!f&&!$('worldView').classList.contains('active'))return;const d=new Date();
+  document.querySelectorAll('#wcList .wct').forEach(e=>{try{e.textContent=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit',timeZone:e.dataset.tz})}catch(x){}});
+  document.querySelectorAll('#wcList .wcd').forEach(e=>{try{e.textContent=new Intl.DateTimeFormat([],{weekday:'short',month:'short',day:'numeric',timeZoneName:'short',timeZone:e.dataset.tz}).format(d)}catch(x){}})}
+function wcFill(){$('wcAdd').innerHTML=WC_CITIES.filter(c=>!wcSel.includes(c[0])).map(c=>`<option>${escH(c[0])}</option>`).join('')||'<option value="">All cities added</option>'}
+function wcSave(){try{localStorage.setItem('worldCities',JSON.stringify(wcSel))}catch(e){}}
+function wcAddCity(){const n=$('wcAdd').value;if(!n||wcSel.includes(n))return;wcSel.push(n);wcSave();wcFill();wcGo(n)}
+function wcDel(i){wcSel.splice(i,1);if(!wcSel.includes(wcFocus))wcFocus=wcSel[0]||'';wcSave();wcFill();wcList();wcDraw()}
+function wcOpen(){wcFill();wcList();wcFocus?wcGo(wcFocus):wcDraw()}
+(function(){const cv=$('wcGlobe');let d=null;
+  const pt=e=>{const t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0])||e;return{x:t.clientX,y:t.clientY}};
+  const start=e=>{const q=pt(e);d={x:q.x,y:q.y,m:false};wcAnim++;if(e.type==='touchstart'&&e.cancelable)e.preventDefault()};
+  const mv=e=>{if(!d)return;const q=pt(e),dx=q.x-d.x,dy=q.y-d.y,k=140/cv.clientWidth;if(Math.hypot(dx,dy)>2)d.m=true;wcSpin(-dx*k,dy*k);d.x=q.x;d.y=q.y;if(e.type==='touchmove'&&e.cancelable)e.preventDefault()};
+  const end=e=>{if(d&&!d.m){const q=pt(e),r=cv.getBoundingClientRect(),sc=cv.width/r.width,x=(q.x-r.left)*sc,y=(q.y-r.top)*sc;let best=null,bd=18;wcHits.forEach(h=>{const dd=Math.hypot(h[1]-x,h[2]-y);if(dd<bd){bd=dd;best=h[0]}});if(best)wcGo(best)}d=null};
+  cv.addEventListener('mousedown',start);window.addEventListener('mousemove',mv);window.addEventListener('mouseup',end);
+  cv.addEventListener('touchstart',start,{passive:false});cv.addEventListener('touchmove',mv,{passive:false});cv.addEventListener('touchend',end);cv.addEventListener('touchcancel',function(){d=null})})();
+function wcSpin(dLon,dLat){wcAnim++;wcLon+=dLon;wcLat=Math.max(-85,Math.min(85,wcLat+dLat));wcDraw()}
+const _openTool=openTool;openTool=function(id){_openTool(id);if(id==='worldView')wcOpen()};
+ckRender();sesTick();setInterval(()=>{ckTick();sesTick();wcTick()},250);
+
+// ===== Menu icons on/off (auto-off on PlayStation browsers) =====
+let ICONS_OFF=/PlayStation|PS4|PS5/i.test(navigator.userAgent);
+try{const v=localStorage.getItem('hideIcons');if(v!==null)ICONS_OFF=v==='1'}catch(e){}
+function iconApply(){document.body.classList.toggle('no-icons',ICONS_OFF);$('iconBtn').textContent='Icons: '+(ICONS_OFF?'Off':'On')}
+function iconToggle(){ICONS_OFF=!ICONS_OFF;try{localStorage.setItem('hideIcons',ICONS_OFF?'1':'0')}catch(e){}iconApply()}
+iconApply();
+
+// ===== Controller + arrow-key navigation =====
+(function(){
+  const SEL='.tool-card,button,input,select,textarea,a[href],[tabindex="0"]';
+  const vis=e=>e.offsetParent!==null&&!e.disabled&&e.tabIndex>=0&&!e.classList.contains('tool-link');
+  const items=()=>[...document.querySelectorAll(SEL)].filter(vis),mid=r=>[r.left+r.width/2,r.top+r.height/2];
+  function move(dir){document.body.classList.add('pad-nav');const list=items();if(!list.length)return;
+    const cur=document.activeElement;if(!cur||cur===document.body||!list.includes(cur)){list[0].focus();return}
+    const [cx,cy]=mid(cur.getBoundingClientRect());let best=null,bs=1e9;
+    list.forEach(e=>{if(e===cur)return;const [x,y]=mid(e.getBoundingClientRect()),dx=x-cx,dy=y-cy;let p,o;
+      if(dir==='down'){if(dy<=4)return;p=dy;o=Math.abs(dx)}else if(dir==='up'){if(dy>=-4)return;p=-dy;o=Math.abs(dx)}
+      else if(dir==='right'){if(dx<=4)return;p=dx;o=Math.abs(dy)}else{if(dx>=-4)return;p=-dx;o=Math.abs(dy)}
+      const sc=p+o*2.5;if(sc<bs){bs=sc;best=e}});
+    if(best){best.focus();best.scrollIntoView({block:'nearest',inline:'nearest'})}}
+  const back=()=>{const b=$('backBtn');if(b&&b.offsetParent!==null)showGrid()};
+  let last={},hold={},told=false;
+  function poll(){const pads=navigator.getGamepads?navigator.getGamepads():[],gp=[...pads].find(q=>q&&q.connected);
+    if(gp){const now=performance.now(),bt=i=>!!(gp.buttons[i]&&gp.buttons[i].pressed),ax=i=>gp.axes[i]||0;
+      if(!told){told=true;note('Controller connected: D-pad moves, X/A selects, O/B goes back')}
+      const st={up:bt(12)||ax(1)<-.6,down:bt(13)||ax(1)>.6,left:bt(14)||ax(0)<-.6,right:bt(15)||ax(0)>.6,a:bt(0),b:bt(1),l:bt(4),r:bt(5)};
+      ['up','down','left','right'].forEach(k=>{if(st[k]){if(!hold[k]){hold[k]=now+350;move(k)}else if(now>=hold[k]){hold[k]=now+140;move(k)}}else hold[k]=0});
+      if(st.a&&!last.a){document.body.classList.add('pad-nav');const e=document.activeElement;if(e&&e!==document.body)e.click()}
+      if(st.b&&!last.b)back();
+      if($('worldView').classList.contains('active')){const rx=ax(2),ry=ax(3);if(Math.abs(rx)>.25||Math.abs(ry)>.25)wcSpin(rx*3,-ry*3)}if(st.l)window.scrollBy(0,-18);if(st.r)window.scrollBy(0,18);last=st}
+    requestAnimationFrame(poll)}
+  if(navigator.getGamepads)poll();
+  addEventListener('keydown',e=>{const t=(e.target.tagName||'').toLowerCase();if(t==='input'||t==='textarea'||t==='select')return;
+    const m={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[e.key];
+    if(m){e.preventDefault();move(m)}else if(e.key==='Escape')back()});
+  const _o=openTool;openTool=function(id){_o(id);if(document.body.classList.contains('pad-nav'))setTimeout(()=>{const b=$('backBtn');if(b)b.focus()},0)};
+  const _s=showGrid;showGrid=function(){_s();if(document.body.classList.contains('pad-nav')){const c=document.querySelector('.tool-card');if(c)c.focus()}};
+})();
+
+// ===== Updates panel (add a new entry at the TOP of this list) =====
+const UPDATES=[
+  {v:'3.2L-4',date:'Oct 4, 2026',items:[
+    'Your Sites is now split into groups with their own sub-dividers (Search & Learn, Video & Streaming, Social & Chat)',
+    'New Group field when adding or editing a site',
+    'Drag your site tiles to reorder them or move them between groups (touch: press and hold)',
+    'Collapse / Expand buttons on every main section divider, remembered between visits',
+    'Updated this Updates panel'
+  ]},
+  {v:'3.1L-2',date:'Oct 4, 2026',items:[
+    'Fixed globe dragging on console browsers (now uses mouse and touch input)',
+    'Added Left, Up, Down and Right buttons for the globe, and right-stick spinning on controllers',
+    'World Clock now has 48 cities (20 new ones added)',
+    'City list moved under the globe, in its own Locations section and box',
+    'Fixed cities showing in the water, and added islands and better coastlines to the globe map',
+    'St. John\'s renamed to NL&LB',
+    'Updated this Updates panel'
+  ]},
+  {v:'2.8L',date:'Oct 4, 2026',items:[
+    'New timers: Cooldown / Respawn Tracker and Gaming Session Reminder',
+    'New World Clock with a draggable globe locator',
+    'Controller and arrow-key navigation',
+    'Icons On/Off button, turned off automatically on PlayStation browsers',
+    'Clock time zone picker (tap the time)',
+    'Site tiles under Your Sites can now all be removed',
+    'Title renamed to Main Site, with new boxed header and gold titles',
+    'This Updates panel'
+  ]},
+  {v:'2.4Beta-2',date:'Earlier',items:['This version had a bug and other issues.']}
+];
+$('updList').innerHTML=UPDATES.map((u,i)=>`<div class="upd"><h3>Version ${escH(u.v)}${i?'':' <span class="cur">Current</span>'} <small>${escH(u.date)}</small></h3><ul>${u.items.map(t=>`<li>${escH(t)}</li>`).join('')}</ul></div>`).join('');
+
+// ===== Drag to reorder Your Sites (mouse, touch and console cursor) =====
+let siteDragEnd=0;
+(function(){const root=$('siteTiles');let st=null;
+  const pt=e=>{const t=(e.touches&&e.touches[0])||(e.changedTouches&&e.changedTouches[0])||e;return{x:t.clientX,y:t.clientY}};
+  const clearMarks=()=>root.querySelectorAll('.drop-before,.drop-after,.drop-into').forEach(n=>{n.classList.remove('drop-before');n.classList.remove('drop-after');n.classList.remove('drop-into')});
+  function target(x,y){const el=document.elementFromPoint(x,y);if(!el||!root.contains(el))return null;
+    const c=el.closest('.tool-card.editing');
+    if(c){if(c===st.card)return null;const r=c.getBoundingClientRect();return{card:c,after:x>r.left+r.width/2}}
+    const w=el.closest('.site-group');return w?{group:w}:null}
+  function begin(){st.active=true;const r=st.card.getBoundingClientRect(),f=st.card.cloneNode(true);f.classList.add('drag-ghost');
+    f.style.cssText='position:fixed;left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;margin:0;pointer-events:none;z-index:60;opacity:.92';
+    document.body.appendChild(f);st.ghost=f;st.dx=st.x0-r.left;st.dy=st.y0-r.top;st.card.classList.add('dragging')}
+  function down(e){if(!siteEdit||st)return;if(e.type==='mousedown'&&e.button!==0)return;
+    const card=e.target.closest&&e.target.closest('.tool-card.editing');if(!card||e.target.closest('.del'))return;
+    const q=pt(e);st={card:card,idx:+card.dataset.idx,x0:q.x,y0:q.y,touch:e.type==='touchstart',active:false,t:null};
+    if(st.touch)st.t=setTimeout(function(){if(st&&!st.active)begin()},300)}
+  function move(e){if(!st)return;const q=pt(e);
+    if(!st.active){if(Math.hypot(q.x-st.x0,q.y-st.y0)>(st.touch?8:6)){if(st.touch){clearTimeout(st.t);st=null}else begin()}return}
+    if(e.cancelable)e.preventDefault();
+    st.ghost.style.left=(q.x-st.dx)+'px';st.ghost.style.top=(q.y-st.dy)+'px';
+    clearMarks();const t=target(q.x,q.y);st.drop=t;
+    if(t&&t.card)t.card.classList.add(t.after?'drop-after':'drop-before');else if(t&&t.group)t.group.classList.add('drop-into');
+    if(q.y<60)window.scrollBy(0,-14);else if(q.y>window.innerHeight-60)window.scrollBy(0,14)}
+  function cancel(){if(!st)return;clearTimeout(st.t);if(st.ghost)st.ghost.remove();if(st.card)st.card.classList.remove('dragging');clearMarks();st=null}
+  function up(){if(!st)return;const s=st;clearTimeout(s.t);if(!s.active){st=null;return}
+    const t=s.drop;cancel();siteDragEnd=Date.now();if(!t)return;
+    const it=SITES[s.idx];if(!it)return;let group,pos;
+    if(t.card){const tg=SITES[+t.card.dataset.idx];if(!tg)return;group=tg.group;SITES.splice(s.idx,1);const ni=SITES.indexOf(tg);pos=t.after?ni+1:ni}
+    else{group=t.group.querySelector('.sub-label span').textContent;SITES.splice(s.idx,1);let last=-1;SITES.forEach((q,i)=>{if(q.group===group)last=i});pos=last>=0?last+1:SITES.length}
+    it.group=group;SITES.splice(pos,0,it);siteStore();siteRender()}
+  root.addEventListener('mousedown',down);root.addEventListener('touchstart',down,{passive:true});
+  window.addEventListener('mousemove',move);window.addEventListener('touchmove',move,{passive:false});
+  window.addEventListener('mouseup',up);window.addEventListener('touchend',up);window.addEventListener('touchcancel',cancel)})();
+
+// ===== Expand / collapse the main sections =====
+const SECS=[['sites','#sitesSection .section-label','#sitesSection'],['timers','#timersLabel','#timersGrid'],['numbers','#numbersLabel','#numbersGrid'],['tools','#toolsLabel','#toolsGrid'],['tools2','#toolsLabel2','#toolsGrid2']];
+let SEC_OFF=[];try{const v=JSON.parse(localStorage.getItem('collapsedSections')||'[]');if(Array.isArray(v))SEC_OFF=v}catch(e){}
+function secApply(){SECS.forEach(function(q){const off=SEC_OFF.indexOf(q[0])>-1,el=document.querySelector(q[2]),b=document.querySelector(q[1]+' .sec-toggle');
+  if(el)el.classList.toggle('collapsed',off);if(b){b.textContent=off?'Expand':'Collapse';b.setAttribute('aria-expanded',off?'false':'true')}})}
+function secToggle(k){SEC_OFF=SEC_OFF.indexOf(k)>-1?SEC_OFF.filter(function(x){return x!==k}):SEC_OFF.concat(k);try{localStorage.setItem('collapsedSections',JSON.stringify(SEC_OFF))}catch(e){}secApply()}
+SECS.forEach(function(q){const lab=document.querySelector(q[1]);if(!lab)return;const b=document.createElement('button');b.className='btn sec-toggle';b.onclick=function(){secToggle(q[0])};lab.appendChild(b)});
+secApply();
+</script>
+</body>
+</html>
