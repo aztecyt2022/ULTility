@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+  <meta name="theme-color" content="#071934">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>PS4 WebKit Host | FW 13.52</title>
+  <style>
+*{box-sizing:border-box}html{background:#061328}body{margin:0;min-height:100vh;color:#eaf2ff;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.48;background:radial-gradient(ellipse at 77% 7%,#123e7d 0,transparent 43%),linear-gradient(132deg,#081a37 0,#07152d 44%,#061127 100%);overflow-x:hidden}button{font-family:inherit;cursor:pointer}button:focus,a:focus{outline:2px solid #75bbff;outline-offset:3px}button:disabled{opacity:.48;cursor:default}a{color:#94caff}a:hover{color:#fff}.ambient{position:fixed;pointer-events:none;opacity:.13;border:1px solid #3a7ddd;transform:rotate(-26deg)}.ambient-a{width:600px;height:700px;right:-340px;top:-180px}.ambient-b{width:450px;height:600px;left:-380px;bottom:-200px}.shell{max-width:1170px;padding:0 40px;margin:0 auto;position:relative}.topbar{display:flex;align-items:center;justify-content:space-between;min-height:102px;border-bottom:1px solid rgba(174,209,255,.13)}.brand{display:flex;gap:15px;align-items:center}.brand-mark{width:49px;height:44px;position:relative}.brand-mark span{position:absolute;display:block}.mark-square{width:12px;height:12px;border:2px solid #81c5ff;left:3px;top:6px;transform:rotate(14deg)}.mark-circle{width:12px;height:12px;border:2px solid #81c5ff;border-radius:50%;right:5px;top:4px}.mark-triangle{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:13px solid #81c5ff;left:3px;bottom:4px}.mark-cross{font-family:Arial;font-size:25px;font-weight:300;line-height:17px;right:5px;bottom:3px;color:#81c5ff}.brand-name{font-size:15px;letter-spacing:2px;font-weight:800}.brand-name span{color:#78adfa;font-weight:400}.top-right{display:flex;gap:29px;align-items:center;color:#a6bad9;font-size:11px;letter-spacing:1.3px}.top-fw strong{color:#e9f3ff;font-size:13px;padding-left:7px}.top-time{font-size:19px;color:#edf6ff;letter-spacing:1px;font-weight:300}.page-heading{padding:53px 0 35px}.eyebrow,.overline{letter-spacing:2px;color:#73b9ff;font-size:11px;font-weight:bold}.eyebrow-rule{display:inline-block;width:30px;border-top:1px solid #5d98d9;margin:0 0 3px 10px}h1{font-size:58px;font-weight:300;letter-spacing:-2.2px;margin:7px 0 9px;line-height:1.08}h1 em{color:#76baff;font-style:normal;font-weight:700}.intro{color:#a9bddb;font-size:15px;max-width:710px;margin:0}.tabs{display:flex;gap:39px;border-bottom:1px solid rgba(174,209,255,.19);margin-bottom:25px}.tab{border:0;background:transparent;color:#a0badb;font-size:13px;font-weight:700;padding:0 3px 17px;position:relative}.tab:hover{color:#fff}.tab.active{color:white}.tab.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#59a9ff;box-shadow:0 0 15px rgba(68,156,255,.65)}.page{display:none}.page.active{display:block}.overview{border:1px solid rgba(141,188,244,.2);border-radius:9px;min-height:177px;background:linear-gradient(100deg,rgba(26,70,126,.40),rgba(11,31,65,.49));padding:27px 30px;display:flex;justify-content:space-between;align-items:center}.overview h2{font-size:25px;font-weight:600;margin:8px 0 9px;letter-spacing:-.5px}.detection-line{display:flex;align-items:center;gap:10px;color:#a5d2ff;font-size:13px}.dot{width:8px;height:8px;border-radius:50%;background:#e9bd70;box-shadow:0 0 8px #e9bd70;flex-shrink:0}.dot.ok{background:#45d1ab;box-shadow:0 0 8px #45d1ab}.dot.warn{background:#f2a65b;box-shadow:0 0 8px #f2a65b}.overview p{color:#a2b8d6;font-size:12px;margin:7px 0 0}.build-chip{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:100px}.build-chip span{font-size:10px;letter-spacing:1.3px;color:#7999bb}.build-chip strong{font-size:34px;letter-spacing:1px;font-weight:300}.build-chip small{font-size:11px;color:#8aa3c2}.section-heading,.log-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:31px 0 16px}.section-heading h3,.section-heading h2,.log-title h3{margin:0;font-size:19px;font-weight:600}.section-heading span,.log-title span{font-size:11px;color:#8da7ca;letter-spacing:.3px}.host-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.host-card{border:1px solid rgba(150,190,239,.20);background:linear-gradient(140deg,rgba(19,43,83,.82),rgba(9,29,61,.86));border-radius:9px;padding:24px;min-height:267px;display:flex;flex-direction:column;align-items:flex-start;transition:border-color .15s}.host-card.selected{border-color:rgba(88,163,252,.52)}.host-card:hover{border-color:#60aaff}.card-top{display:flex;align-items:center;justify-content:space-between;width:100%}.host-icon{border:1px solid #56a6ff;background:rgba(66,143,247,.16);color:#9ed3ff;border-radius:9px;width:41px;height:41px;text-align:center;line-height:39px;font-weight:bold;font-size:21px}.host-icon.alt{border-color:#6793bb;color:#d7e9ff;background:#1b3558}.flag{border-radius:3px;background:rgba(55,150,255,.17);color:#7fc3ff;padding:5px 8px;font-size:10px;font-weight:700;letter-spacing:1px}.flag.subtle{background:rgba(159,196,230,.08);color:#8faccd}.host-card h4{font-size:23px;margin:14px 0 4px;font-weight:600}.host-card p{font-size:13px;color:#a4bad7;margin:0;line-height:1.6;min-height:66px}.host-meta{font-size:11px;color:#87a8ce;margin:8px 0 16px}.separator{margin:0 6px}.action{border:1px solid transparent;border-radius:5px;padding:12px 19px;font-size:13px;font-weight:bold;min-height:44px;white-space:nowrap}.action span{padding-left:14px;font-weight:400}.primary{color:#031c39;background:#68b9ff}.primary:hover{background:#a5d7ff}.secondary{border-color:rgba(129,184,243,.57);color:#c7e3ff;background:rgba(40,80,124,.36)}.secondary:hover{background:rgba(76,126,187,.44)}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.small-panel{border:1px solid rgba(140,180,225,.16);background:rgba(8,26,56,.65);border-radius:8px;padding:20px 22px;min-height:156px}.small-heading{font-size:13px;font-weight:bold}.small-icon{display:inline-block;width:24px;font-size:17px;color:#7fbef8}.small-panel p{font-size:12px;color:#93aac8;line-height:1.55;min-height:43px;margin:7px 0 12px}.small-panel code{font-family:Consolas,monospace}.small-button{background:transparent;color:#a2d2ff;border:1px solid rgba(111,169,223,.36);padding:9px 14px;border-radius:4px;font-size:12px;font-weight:bold}.small-button:hover:enabled{background:rgba(78,148,230,.15)}.safety-strip{border-left:3px solid #4c9ceb;background:rgba(35,79,131,.18);padding:12px 16px;margin:22px 0 35px;color:#b4c8e1;font-size:12px}.safety-strip strong{color:#e3f2ff}.footer{border-top:1px solid rgba(145,184,222,.15);padding:20px 0 24px;display:flex;justify-content:space-between;gap:20px;font-size:10px;letter-spacing:1px;color:#6784a7}.footer b{color:#8cc7ff}.diag-title{margin-top:15px}.section-description{font-size:13px;color:#9eb4d1;margin:0 0 21px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.metric{padding:20px;border-radius:7px;border:1px solid rgba(140,180,225,.20);background:rgba(15,40,77,.64);min-height:98px;display:flex;flex-direction:column;justify-content:space-between}.metric span{font-size:12px;color:#8faacc}.metric strong{font-size:19px;font-weight:600;color:#d8ecff;overflow-wrap:anywhere}.diag-actions{display:flex;gap:13px;margin:21px 0}.diag-btn{min-width:160px}.log-title{margin-top:28px}#log{min-height:205px;max-height:335px;overflow:auto;padding:18px;border:1px solid rgba(127,166,216,.24);background:#061326;color:#a3d1f2;font-family:Consolas,monospace;font-size:12px;line-height:1.7;border-radius:7px;white-space:pre-wrap;overflow-wrap:anywhere}.ua-wrap{margin:18px 0 45px;display:flex;gap:10px;flex-direction:column;color:#9ab7d4;font-size:12px}.ua-wrap code{overflow-wrap:anywhere;color:#cfdeef;font-size:12px}.about-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}.about-panel{padding:23px;background:rgba(14,39,80,.64);border:1px solid rgba(140,180,225,.18);border-radius:8px}.about-panel h3,.sources h3{margin:0 0 14px;font-size:19px}.about-panel p{color:#a6b9d7;font-size:13px;line-height:1.75}.about-panel strong{color:#fff}.sources{margin:25px 0 55px}.sources a{display:inline-block;margin:0 20px 10px 0;font-size:13px;text-decoration:none}@media(max-width:760px){.shell{padding:0 18px}.topbar{min-height:75px}.top-fw{display:none}.page-heading{padding:37px 0 26px}h1{font-size:43px}.tabs{gap:20px}.host-grid,.bottom-grid,.about-layout{grid-template-columns:1fr}.host-card{min-height:0}.host-card p,.small-panel p{min-height:0}.metrics{grid-template-columns:repeat(2,1fr)}.overview{padding:21px;gap:12px}.build-chip{min-width:60px}.build-chip strong{font-size:25px}.section-heading span,.log-title span{display:none}.footer{flex-wrap:wrap}.footer span:last-child{display:none}}@media(max-width:440px){.brand-name{font-size:12px;letter-spacing:1px}.top-time{font-size:16px}.intro{font-size:13px}.metrics{grid-template-columns:1fr 1fr}.metric{padding:13px;min-height:88px}.metric strong{font-size:15px}.overview h2{font-size:20px}.tabs{gap:13px}.tab{font-size:12px}.host-card{padding:20px}}
+
+/* ULTility integration: stays usable in the PS4 cursor browser */
+.site-home{padding:12px 0 0}
+.site-home a{display:inline-block;padding:9px 14px;border:1px solid #5681ad;border-radius:9px;color:#e5f6ff;text-decoration:none;background:rgba(10,39,76,.8)}
+.site-home a:hover,.site-home a:focus{outline:2px solid #70d6ff;color:#fff}
+
+</style>
+  
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span class="mark-square"></span><span class="mark-circle"></span><span class="mark-triangle"></span><span class="mark-cross">×</span></div>
+        <div class="brand-name">ULTILITY<span> / PS4 WEBKIT</span></div>
+      </div>
+      <div class="top-right">
+        <span class="top-fw">FIRMWARE TARGET <strong>13.52</strong></span>
+        <span class="top-time" id="clock">--:--</span>
+      </div>
+    </header>
+    <div class="site-home"><a href="../">← Back to ULTility</a></div>
+    <div class="page-heading">
+      <div class="eyebrow">PLAYSTATION 4 <span class="eyebrow-rule"></span> COMMUNITY HOST</div>
+      <h1>WebKit <em>Launcher</em></h1>
+      <p class="intro">Launch a community jailbreak host from your PS4 browser, or inspect your browser compatibility before proceeding.</p>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab active" type="button" data-page="launch" aria-controls="page-launch" aria-selected="true">Launcher</button>
+      <button class="tab" type="button" data-page="diagnostics" aria-controls="page-diagnostics" aria-selected="false">Diagnostics</button>
+      <button class="tab" type="button" data-page="about" aria-controls="page-about" aria-selected="false">About / Safety</button>
+    </nav>
+
+    <main>
+      <section class="page active" id="page-launch" aria-labelledby="launch-heading">
+        <div class="overview">
+          <div class="overview-copy">
+            <div class="overline">CONSOLE DETECTION</div>
+            <h2 id="launch-heading">Ready to connect</h2>
+            <div class="detection-line"><span class="dot" id="fw-dot"></span><strong id="detected-fw">Checking your browser…</strong></div>
+            <p id="fw-explanation">Reading firmware information from the browser user agent.</p>
+          </div>
+          <div class="build-chip"><span>HOST BUILD</span><strong>1.0.0</strong><small>October 2026</small></div>
+        </div>
+        <div class="section-heading"><h3>Choose a jailbreak host</h3><span>Manual launch · No auto-execution</span></div>
+        <div class="host-grid">
+          <article class="host-card selected">
+            <div class="card-top"><span class="host-icon">W</span><span class="flag">PRIMARY</span></div>
+            <h4>WebKitty</h4>
+            <p>Community WebKit exploit host with a firmware-specific HEN / GoldHEN selection and its own caching.</p>
+            <div class="host-meta">External host <span class="separator">•</span> Internet for first visit</div>
+            <button class="action primary" type="button" data-provider="webkitty">Open WebKitty <span aria-hidden="true">↗</span></button>
+          </article>
+          <article class="host-card">
+            <div class="card-top"><span class="host-icon alt">R</span><span class="flag subtle">ALTERNATIVE</span></div>
+            <h4>RawGame 13.xx</h4>
+            <p>Alternative community browser chain with firmware-based routing for supported PS4 versions.</p>
+            <div class="host-meta">External host <span class="separator">•</span> Internet for first visit</div>
+            <button class="action secondary" type="button" data-provider="rawgame">Open RawGame <span aria-hidden="true">↗</span></button>
+          </article>
+        </div>
+        <div class="bottom-grid">
+          <div class="small-panel">
+            <div class="small-heading"><span class="small-icon">◈</span> Local exploit module</div>
+            <p id="local-description">Not installed. A separate, licensed and tested 13.52 chain can be integrated later under <code>local_exploit/</code>.</p>
+            <button class="small-button" type="button" id="local-launch" disabled>Local chain unavailable</button>
+          </div>
+          <div class="small-panel">
+            <div class="small-heading"><span class="small-icon">◎</span> Website hosting</div>
+            <p id="cache-description">This launcher is served by the ULTility website. Offline caching is not guaranteed on this static host; external exploit sites manage their own caching.</p>
+            <button class="small-button" type="button" id="cache-update">Refresh launcher</button>
+          </div>
+        </div>
+        <p class="safety-strip"><strong>Important:</strong> This launcher itself does not exploit or jailbreak the console. Only the external project you choose attempts that action. Save your data first; exploit attempts can freeze or restart the PS4.</p>
+      </section>
+
+      <section class="page" id="page-diagnostics" aria-labelledby="diag-heading" hidden>
+        <div class="section-heading diag-title"><h2 id="diag-heading">Browser diagnostics</h2><span>Non-exploit tests only</span></div>
+        <p class="section-description">Checks browser features and whether this static website can be loaded without changing console settings or running native code.</p>
+        <div class="metrics">
+          <div class="metric"><span>Platform</span><strong id="diag-platform">—</strong></div>
+          <div class="metric"><span>Firmware</span><strong id="diag-firmware">—</strong></div>
+          <div class="metric"><span>ArrayBuffer</span><strong id="diag-buffer">—</strong></div>
+          <div class="metric"><span>Workers</span><strong id="diag-worker">—</strong></div>
+          <div class="metric"><span>Application Cache</span><strong id="diag-cache">—</strong></div>
+          <div class="metric"><span>Website access</span><strong id="diag-host">—</strong></div>
+        </div>
+        <div class="diag-actions"><button class="action primary diag-btn" type="button" id="run-tests">Run safe self-test</button><button class="action secondary diag-btn" type="button" id="clear-log">Clear log</button></div>
+        <div class="log-title"><h3>Event log</h3><span>Local display only · Not uploaded</span></div>
+        <pre id="log" role="log" aria-live="polite">No diagnostic events yet.</pre>
+        <div class="ua-wrap"><span>Browser user agent</span><code id="user-agent">—</code></div>
+      </section>
+
+      <section class="page" id="page-about" aria-labelledby="about-heading" hidden>
+        <div class="section-heading"><h2 id="about-heading">About this project</h2><span>Host v1.0.0</span></div>
+        <div class="about-layout">
+          <div class="about-panel"><h3>What this build does</h3><p>Provides a PS4-browser-friendly dashboard, firmware identification, external community host links, and safe compatibility checks on ULTility's static website.</p><p>It <strong>does not</strong> contain a custom WebKit vulnerability, a native userland or kernel exploit, GoldHEN binaries, or an offline jailbreak chain.</p></div>
+          <div class="about-panel"><h3>Use carefully</h3><p>Firmware is inferred from the browser user agent, not independently verified. Check <strong>Settings → System → System Information</strong> on your PS4. Do not install unverified payloads or update firmware without checking compatibility.</p><p>The external host runs under its own website and is maintained separately from this project.</p></div>
+        </div>
+        <div class="sources"><h3>Upstream documentation</h3><a href="https://consolemods.org/wiki/PS4:Standard_Jailbreak">ConsoleMods setup guide ↗</a><a href="https://github.com/raw13g/raw13g.github.io">RawGame source ↗</a><a href="https://github.com/GoldHEN/GoldHEN">GoldHEN project ↗</a></div>
+      </section>
+    </main>
+    <footer class="footer"><span>PS4 WEBKIT HOST <b>13.52</b></span><span id="footer-status">ULTility static frontend • No exploit running</span><span>Designed for the PS4 browser cursor</span></footer>
+  </div>
+<script>
+/* ULTility PS4 WebKit Launcher v1.0.0 — intentionally ES5-compatible; no exploit code. */
+(function () {
+  'use strict';
+  var TARGET_FIRMWARE = '13.52';
+  var PROVIDERS = {
+    webkitty: { name: 'WebKitty', url: 'https://webkitty.arabpixel.net/' },
+    rawgame: { name: 'RawGame 13.xx', url: 'https://raw13g.github.io/' }
+  };
+  var logLines = [];
+  var userAgent = navigator.userAgent || '';
+  var detected = detectFirmware(userAgent);
+
+  function byId(id) { return document.getElementById(id); }
+  function setText(id, value) { var n = byId(id); if (n) { n.textContent = value; } }
+  function now() { var d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds()); }
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function log(text) {
+    logLines.push('[' + now() + '] ' + text);
+    if (logLines.length > 65) { logLines.shift(); }
+    setText('log', logLines.join('\n'));
+    try { byId('log').scrollTop = byId('log').scrollHeight; } catch (ignore) {}
+  }
+  function detectFirmware(ua) {
+    var m = /PlayStation\s*4[^\d]*([0-9]{1,2}\.[0-9]{2})/i.exec(ua);
+    if (!m) { m = /\bPS4[^\d]*([0-9]{1,2}\.[0-9]{2})/i.exec(ua); }
+    return { ps4: /PlayStation\s*4|\bPS4\b/i.test(ua), firmware: m ? m[1] : '' };
+  }
+  function refreshClock() { var d = new Date(); setText('clock', pad(d.getHours()) + ':' + pad(d.getMinutes())); }
+  function showFirmware() {
+    var dot = byId('fw-dot');
+    if (detected.ps4 && detected.firmware === TARGET_FIRMWARE) {
+      setText('detected-fw', 'PS4 firmware 13.52 detected');
+      setText('fw-explanation', 'Browser-reported firmware matches this host target. Check System Information to confirm.');
+      setText('launch-heading', 'Console recognized');
+      dot.className = 'dot ok';
+      log('PS4 13.52 detected from browser user agent.');
+    } else if (detected.ps4) {
+      setText('detected-fw', 'PS4 detected · firmware ' + (detected.firmware || 'unknown'));
+      setText('fw-explanation', 'The target is 13.52. Your firmware needs independent verification before launching an external host.');
+      dot.className = 'dot warn';
+      log('PS4 detected, browser firmware: ' + (detected.firmware || 'unknown') + '.');
+    } else {
+      setText('detected-fw', 'Desktop / unrecognized browser');
+      setText('fw-explanation', 'Preview mode. Open this page on the actual PS4 to detect firmware.');
+      dot.className = 'dot warn';
+      log('No PS4 marker detected; showing desktop-preview mode.');
+    }
+    setText('diag-platform', detected.ps4 ? 'PlayStation 4' : 'Other browser');
+    setText('diag-firmware', detected.firmware || 'Not detected');
+    setText('user-agent', userAgent || '(empty)');
+  }
+  function showPage(page) {
+    var pages = document.querySelectorAll('.page');
+    var tabs = document.querySelectorAll('.tab');
+    var i, active;
+    for (i = 0; i < pages.length; i++) {
+      active = pages[i].id === 'page-' + page;
+      pages[i].className = active ? 'page active' : 'page';
+      pages[i].hidden = !active;
+    }
+    for (i = 0; i < tabs.length; i++) {
+      active = tabs[i].getAttribute('data-page') === page;
+      tabs[i].className = active ? 'tab active' : 'tab';
+      tabs[i].setAttribute('aria-selected', active ? 'true' : 'false');
+    }
+  }
+  function launchProvider(providerId) {
+    var target = PROVIDERS[providerId];
+    if (!target) { log('Unknown provider was rejected.'); return; }
+    if (detected.firmware !== TARGET_FIRMWARE || !detected.ps4) {
+      if (!window.confirm('Firmware 13.52 has not been detected on this browser. Open ' + target.name + ' anyway? This host does not verify compatibility.')) {
+        log('Launch cancelled: target firmware not detected.'); return;
+      }
+    }
+    log('Opening external ' + target.name + '. This host does not run the jailbreak itself.');
+    setText('footer-status', 'Opening ' + target.name + '…');
+    window.location.href = target.url;
+  }
+  function featureTests() {
+    var buffer = 'Unavailable';
+    try {
+      var arr = new Uint8Array(new ArrayBuffer(16));
+      arr[0] = 165;
+      arr[15] = 90;
+      buffer = arr[0] === 165 && arr[15] === 90 ? 'Passed' : 'Failed';
+    } catch (e) { buffer = 'Failed'; }
+    setText('diag-buffer', buffer);
+    setText('diag-worker', typeof Worker !== 'undefined' ? 'Available' : 'Unavailable');
+    setText('diag-cache', window.applicationCache ? cacheStateName(window.applicationCache.status) : 'Unavailable');
+    log('ArrayBuffer / typed-array round-trip: ' + buffer + '.');
+    log('Web Workers: ' + (typeof Worker !== 'undefined' ? 'available' : 'unavailable') + '.');
+    log('Legacy AppCache: ' + (window.applicationCache ? cacheStateName(window.applicationCache.status) : 'unavailable') + '.');
+  }
+  function cacheStateName(code) {
+    var names = ['uncached', 'idle', 'checking', 'downloading', 'updateready', 'obsolete'];
+    return names[code] || 'unknown';
+  }
+  function checkHost() {
+    var xhr = new XMLHttpRequest();
+    var finished = false;
+    try {
+      xhr.open('GET', 'index.html?check=' + new Date().getTime(), true);
+      xhr.timeout = 4500;
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4 || finished) { return; }
+        finished = true;
+        var ok = xhr.status === 200 && xhr.responseText.indexOf('PS4 WebKit Host | FW 13.52') !== -1;
+        setText('diag-host', ok ? 'Reachable' : 'Unavailable');
+        log(ok ? 'ULTility static website reachable.' : 'Static website check failed.');
+      };
+      xhr.ontimeout = function () { if (!finished) { finished = true; setText('diag-host', 'Timed out'); log('Website request timed out.'); } };
+      xhr.onerror = function () { if (!finished) { finished = true; setText('diag-host', 'Unavailable'); log('Website request failed.'); } };
+      xhr.send(null);
+    } catch (err) { setText('diag-host', 'Unavailable'); log('Static website request blocked.'); }
+  }
+  function doSafeSelfTest() { log('Starting safe compatibility test.'); featureTests(); checkHost(); }
+  function initAppCache() {
+    var c = window.applicationCache;
+    if (!c) { setText('cache-description', 'Application Cache is not available in this browser. The host still works online.'); return; }
+    function info(s) { setText('diag-cache', cacheStateName(c.status)); log('Host cache: ' + s + '.'); }
+    c.addEventListener('cached', function () { info('launcher files cached for offline use'); }, false);
+    c.addEventListener('checking', function () { setText('diag-cache', 'Checking'); }, false);
+    c.addEventListener('downloading', function () { setText('diag-cache', 'Downloading'); }, false);
+    c.addEventListener('updateready', function () { info('update ready'); setText('cache-description', 'An updated launcher is available. Select Check for UI update to load it.'); }, false);
+    c.addEventListener('noupdate', function () { info('already current'); }, false);
+    c.addEventListener('error', function () { info('cache unavailable (network or browser policy)'); }, false);
+    c.addEventListener('obsolete', function () { info('obsolete'); }, false);
+  }
+  function updateAppCache() {
+    var c = window.applicationCache;
+    if (!c) { log('Browser does not provide Application Cache.'); window.alert('Offline AppCache is not available in this browser.'); return; }
+    if (c.status === 4) {
+      try { c.swapCache(); log('Updated launcher cache swapped. Reloading UI.'); window.location.reload(); } catch (err) { log('Cannot swap cache: ' + err.message); }
+      return;
+    }
+    if (c.status === 2 || c.status === 3) { log('Cache update is already in progress.'); return; }
+    try { c.update(); log('Checking launcher AppCache for updates.'); } catch (e) { log('AppCache update not available: ' + e.message); }
+  }
+  function init() {
+    var tabs = document.querySelectorAll('.tab'), providers = document.querySelectorAll('[data-provider]'), i;
+    refreshClock(); setInterval(refreshClock, 30000);
+    for (i = 0; i < tabs.length; i++) {
+      tabs[i].onclick = function () { showPage(this.getAttribute('data-page')); };
+    }
+    for (i = 0; i < providers.length; i++) {
+      providers[i].onclick = function () { launchProvider(this.getAttribute('data-provider')); };
+    }
+    byId('run-tests').onclick = doSafeSelfTest;
+    byId('clear-log').onclick = function () { logLines = []; setText('log', 'No diagnostic events yet.'); };
+    byId('cache-update').onclick = function () { window.location.reload(true); };
+    showFirmware();
+    log('Frontend loaded. No exploit code has been executed.');
+    setText('diag-buffer', 'Not tested');
+    setText('diag-worker', 'Not tested');
+    setText('diag-cache', window.applicationCache ? cacheStateName(window.applicationCache.status) : 'Unavailable');
+    setText('diag-host', 'Not tested');
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init, false); } else { init(); }
+}());
+
+</script>
+</body>
+</html>
